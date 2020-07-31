@@ -66,7 +66,7 @@ exports.user_login = (req, res, next) => {
                     },
                         process.env.JWT_KEY,
                         {
-                            expiresIn: "3h"
+                            expiresIn: "8d"
                         });
                     return res.status(200).json({
                         message: "Auth Successfull",
@@ -347,7 +347,7 @@ exports.loginGoogle = (req,res,next) =>{
             },
                 process.env.JWT_KEY,
                 {
-                    expiresIn: "3h"
+                    expiresIn: "8d"
                 });
 
                 res.json({
@@ -376,7 +376,7 @@ exports.loginGoogle = (req,res,next) =>{
                 },
                     process.env.JWT_KEY,
                     {
-                        expiresIn: "3h"
+                        expiresIn: "8d"
                     });
     
                     res.status(200).json({
@@ -418,7 +418,7 @@ exports.loginFacebook = (req,res,next) =>{
             },
                 process.env.JWT_KEY,
                 {
-                    expiresIn: "3h"
+                    expiresIn: "8d"
                 });
 
                 res.json({
@@ -447,7 +447,7 @@ exports.loginFacebook = (req,res,next) =>{
                 },
                     process.env.JWT_KEY,
                     {
-                        expiresIn: "3h"
+                        expiresIn: "8d"
                     });
     
                     res.status(200).json({

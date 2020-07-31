@@ -76,7 +76,7 @@ router.get('/ByUser', checkAuth, (req, res, next) => {
 
 router.delete('/:WishlistId', checkAuth, (req, res, next) => {
     const id = req.params.WishlistId;
-    Wishlist.deleteOne({ _id: id }).exec()
+    Wishlist.deleteOne({ book: id }).exec()
         .then(result => {
             res.status(200).json({
                 message: "Book deleted From Wishlist",
