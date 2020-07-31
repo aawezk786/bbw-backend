@@ -4,11 +4,12 @@ const cartItemSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     cart: [
-        {
+        {   
+            id: { type: mongoose.Schema.Types.ObjectId },
             book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
             quantity: { type: Number, default: 1 },
-            price: {type : String},
-            total: {type: String}
+            price: {type : Number},
+            total: {type: Number}
         }
     ],
     createdAt: { type: Date, default: Date.now() },
