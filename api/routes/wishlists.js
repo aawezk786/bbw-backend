@@ -64,6 +64,7 @@ router.get('/ByUser', checkAuth, (req, res, next) => {
         .select('book')
         .exec()
         .then(result => {
+            console.log(result)
             res.json({
                 user: req.userData.userId,
                 books: result

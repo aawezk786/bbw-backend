@@ -45,7 +45,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
             .exec()
             .then(newItem => {
                 res.status(201).json({
-                    message: newItem
+                    message: "Add To Cart"
                 })
             })
             .catch(error => {
@@ -75,7 +75,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
             .save()
             .then(newCart => {
                 res.status(201).json({
-                    message: newCart
+                    message: "Add Product To Cart"
                 });
             })
             .catch(error => {
@@ -98,17 +98,32 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
 router.get('/User', checkAuth, (req, res, next) => {
 
     const userId = req.userData.userId;
-
+    console.log(userId);
     CartItem.find({user: userId})
     .select('_id user cart')
     .populate('cart.book','book_name _id quantity selling_price weight book_img')
     .exec()
     .then(cartItems => {
-      const count=  cartItems[0].cart.length
-        res.status(200).json({
-            count : count,
-             cartItems
-        })
+       
+        if(cartItems.length > 0){
+            const count=  cartItems[0].cart.length
+            if(count > 0){
+                res.status(200).json({
+                    count : count,
+                     cartItems
+                });
+            }else{
+                res.status(404).json({
+                    message : "Cart Is Empty"
+                }); 
+            }
+       
+        }else{
+            res.status(404).json({
+                message : "Cart Is Empty"
+            }); 
+        }
+      
     })
 });
 
@@ -142,12 +157,15 @@ router.put('/update/quantity',checkAuth, (req, res, next) => {
 
 router.delete('/:cartId', checkAuth, (req, res, next) => {
     const id = req.params.cartId;
-    CartItem.deleteOne({ _id: id }).exec()
+    const userId = req.userData.userId
+    CartItem.findOneAndUpdate({ user : userId },{$pull : {"cart" : {_id : id}}}).exec()
         .then(result => {
-            res.status(200).json({
-                message: "Book deleted From Cart",
-                result: result
-            });
+            if(result){
+                res.status(200).json({
+                    message: "Book deleted From Cart"
+                });
+            }
+            
         })
         .catch(err => {
             res.status(500).json({

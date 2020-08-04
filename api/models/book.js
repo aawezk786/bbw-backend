@@ -90,35 +90,35 @@ const bookSchema = mongoose.Schema({
     toJSON : {virtuals : true}
 });
 
-bookSchema.plugin(mongooseAlgolia, {
-    appId: 'JF5EPDPH1R',
-    apiKey: 'dfa3ef2bde335a6e8d006df5eabdde15',
-    indexName: 'bbw',
-     selector : '_id book_name author_name Isbn_no categories language'   ,
-     populate : {
-         path : 'categories',
-         select : 'category sub_category'
-     },
-    defaults: {
-      author: 'uknown'
-    },
-    mappings: {
-      book_name: function(value) {
-        return `${value}`
-      }
-    },
-    debug: true
-  })
+// bookSchema.plugin(mongooseAlgolia, {
+//     appId: 'JF5EPDPH1R',
+//     apiKey: 'dfa3ef2bde335a6e8d006df5eabdde15',
+//     indexName: 'bbw',
+//      selector : '_id book_name author_name Isbn_no categories language'   ,
+//      populate : {
+//          path : 'categories',
+//          select : 'category sub_category'
+//      },
+//     defaults: {
+//       author: 'uknown'
+//     },
+//     mappings: {
+//       book_name: function(value) {
+//         return `${value}`
+//       }
+//     },
+//     debug: true
+//   })
 
 
 
 
-let Model = mongoose.model('Book', bookSchema);
+// let Model = mongoose.model('Book', bookSchema);
 
-Model.SyncToAlgolia();
-Model.SetAlgoliaSettings({
-    searchableAttributes: [ 'author_name' , 'book_name' ]
-});
+// Model.SyncToAlgolia();
+// Model.SetAlgoliaSettings({
+//     searchableAttributes: [ 'author_name' , 'book_name' ]
+// });
 
 
 module.exports = mongoose.model('Book', bookSchema);
