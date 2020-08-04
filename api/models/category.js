@@ -8,7 +8,10 @@ const categorySchema = mongoose.Schema({
     },
     icon_name : {type : String, required:true},
     category : { type: String, required: true },
-    subcategory : {type : Array}
+    subcategory : { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subcategory'
+    }
 
 });
 

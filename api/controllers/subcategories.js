@@ -1,14 +1,12 @@
-const Category = require('../models/category');
+const Subcategory = require('../models/subcategory');
 const mongoose = require('mongoose');
 
 
 
 
-exports.create_cats = (req, res, next) => {
-    const category = new Category({
+exports.create_subcats = (req, res, next) => {
+    const category = new Subcategory({
         _id : new mongoose.Types.ObjectId(),
-        icon_name : req.body.icon_name,
-        category : req.body.category,
         subcategory : req.body.subcategory
     });
         category.save()
@@ -24,8 +22,8 @@ exports.create_cats = (req, res, next) => {
 }
 
 
-exports.getall_cats = (req,res,next)=>{
-    Category.find().populate('subcategory')
+exports.getall_subcats = (req,res,next)=>{
+    Subcategory.find()
     .exec()
     .then(docs =>{
         if(docs.length >=0){

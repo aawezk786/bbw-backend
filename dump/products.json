@@ -1,0 +1,311 @@
+{
+  "cart": [
+  ],
+  "products": [
+    {
+      "id": 1,
+      "image": "https://static.acer.com/up/Resource/Acer/Laptops/Swift_7/Image/20190226/swift_7_SF714-52T-Black-Budlight_AL_preview.png",
+      "name": "Acer Laptop",
+      "description": "Acer Aspire 5S A515-54",
+      "rating": 4,
+      "types": [
+        {
+          "id": 1,
+          "name": "4GB RAM",
+          "stock": 2,
+          "price": 150
+        },
+        {
+          "id": 2,
+          "name": "4GB Graphics Card",
+          "stock": 1,
+          "price": 250
+        },
+        {
+          "id": 3,
+          "name": "15-inch",
+          "stock": 4,
+          "price": 50
+        }
+      ],
+      "category": {
+        "name": "Windows",
+        "id": 1
+      }
+    },
+    {
+      "id": 2,
+      "image": "https://images-na.ssl-images-amazon.com/images/I/51FQpz-zY1L._SL1024_.jpg",
+      "name": "Mac book",
+      "price": 150,
+      "description": "Apple MacBook Air",
+      "rating": 4,
+      "types": [
+        {
+          "id": 1,
+          "name": "4GB RAM",
+          "stock": 2,
+          "price": 150
+        },
+        {
+          "id": 2,
+          "name": "4GB Graphics Card",
+          "stock": 1,
+          "price": 250
+        }
+      ],
+      "category": {
+        "name": "Mac",
+        "id": 2
+      }
+    },
+    {
+      "id": 3,
+      "image": "https://static.acer.com/up/Resource/Acer/Laptops/Swift_7/Image/20190226/swift_7_SF714-52T-Black-Budlight_AL_preview.png",
+      "name": "Dell Laptop",
+      "price": 250,
+      "description": "Find solace in your love for riding when you cruise on the Bajaj Avenger. 'Feel like God' on any road, weather condition or terrain. Liberate yourself on every ride thanks to the Bajaj Avenger’s style, comfort and performance.",
+      "rating": 4,
+      "types": [
+        {
+          "id": 1,
+          "name": "4GB RAM",
+          "stock": 2,
+          "price": 150
+        },
+        {
+          "id": 2,
+          "name": "4GB Graphics Card",
+          "stock": 1,
+          "price": 250
+        }
+      ],
+      "category": {
+        "name": "Windows",
+        "id": 1
+      }
+    },
+    {
+      "id": 4,
+      "image": "https://images-na.ssl-images-amazon.com/images/I/51FQpz-zY1L._SL1024_.jpg",
+      "name": "Apple Laptop",
+      "price": 250,
+      "description": "Apple MacBook Air",
+      "rating": 4,
+      "types": [
+        {
+          "id": 4,
+          "name": "13-inch",
+          "stock": 2,
+          "price": 150
+        },
+        {
+          "id": 2,
+          "name": "4GB Graphics Card",
+          "stock": 1,
+          "price": 250
+        }
+      ],
+      "category": {
+        "name": "Mac",
+        "id": 2
+      }
+    },
+    {
+      "id": 5,
+      "image": "https://images-na.ssl-images-amazon.com/images/I/61bqbM9ZyGL._SL1500_.jpg",
+      "name": "Apple Laptop",
+      "price": 250,
+      "description": "Apple MacBook Air",
+      "rating": 4,
+      "types": [
+        {
+          "id": 4,
+          "name": "13-inch",
+          "stock": 2,
+          "price": 150
+        },
+        {
+          "id": 2,
+          "name": "4GB Graphics Card",
+          "stock": 1,
+          "price": 250
+        }
+      ],
+      "category": {
+        "name": "Mac",
+        "id": 2
+      }
+    },
+    {
+      "id": 6,
+      "image": "https://images-na.ssl-images-amazon.com/images/I/51FQpz-zY1L._SL1024_.jpg",
+      "name": "Dell Notebook",
+      "price": 250,
+      "description": "Dell Inspiron Series",
+      "rating": 4,
+      "types": [
+        {
+          "id": 4,
+          "name": "13-inch",
+          "stock": 2,
+          "price": 150
+        }
+      ],
+      "category": {
+        "name": "Windows",
+        "id": 1
+      }
+    },
+    {
+      "id": 7,
+      "image": "https://images-na.ssl-images-amazon.com/images/I/91HWpG0P97L._SL1500_.jpg",
+      "name": "Lenovo Laptop",
+      "price": 250,
+      "description": "Lenovo Ideapad S340",
+      "rating": 4,
+      "types": [
+        {
+          "id": 3,
+          "name": "15-inch",
+          "stock": 2,
+          "price": 150
+        }
+      ],
+      "category": {
+        "name": "Windows",
+        "id": 1
+      }
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "image": "https://d1ralsognjng37.cloudfront.net/aec6e2d7-b107-46eb-b700-4138f07ff8fd.jpeg",
+      "time": "10 Oct at 08:13 pm",
+      "totalPrice": 450,
+      "meals": [
+        {
+          "id": 1,
+          "name": "Bike 400cc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "image": "https://d1ralsognjng37.cloudfront.net/21dee048-f651-41f6-9f24-a7fee046fbf2.jpeg",
+      "time": "20 Oct at 08:13 pm",
+      "totalPrice": 550,
+      "meals": [
+        {
+          "id": 1,
+          "name": "Bike 400cc",
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "name": "Avenger 200cc",
+          "quantity": 1
+        },
+        {
+          "id": 3,
+          "name": "Bike 400cc",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "image": "https://d1ralsognjng37.cloudfront.net/097d2aab-d99a-4859-a288-a54f7038983e.jpeg",
+      "time": "30 Oct at 08:13 pm",
+      "totalPrice": 450,
+      "meals": [
+        {
+          "id": 1,
+          "name": "Bike 400cc",
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "name": "Paneer Tikka",
+          "quantity": 1
+        },
+        {
+          "id": 3,
+          "name": "Veg Manchurian",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "image": "https://d1ralsognjng37.cloudfront.net/67a08fb1-1d62-4504-afab-e9459fcfdd86.jpeg",
+      "time": "10 Oct at 08:13 pm",
+      "totalPrice": 450,
+      "meals": [
+        {
+          "id": 1,
+          "name": "Bike 400cc",
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "name": "Paneer Tikka",
+          "quantity": 1
+        },
+        {
+          "id": 3,
+          "name": "Veg Manchurian",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "image": "https://d1ralsognjng37.cloudfront.net/21dee048-f651-41f6-9f24-a7fee046fbf2.jpeg",
+      "time": "10 Oct at 08:13 pm",
+      "totalPrice": 450,
+      "meals": [
+        {
+          "id": 1,
+          "name": "Bike 400cc",
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "name": "Paneer Tikka",
+          "quantity": 2
+        }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "name": "Windows",
+      "id": 1
+    },
+    {
+      "name": "Mac",
+      "id": 2
+    }
+  ],
+  "types": [
+    {
+      "id": 1,
+      "name": "4GB RAM"
+    },
+    {
+      "id": 2,
+      "name": "4GB Graphics Card"
+    },
+    {
+      "id": 3,
+      "name": "15-inch"
+    },
+    {
+      "id": 4,
+      "name": "13-inch"
+    }
+  ]
+}
