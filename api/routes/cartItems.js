@@ -99,32 +99,45 @@ router.get('/User', checkAuth, (req, res, next) => {
 
     const userId = req.userData.userId;
     console.log(userId);
+    let total = [];
     CartItem.find({user: userId})
     .select('_id user cart')
     .populate('cart.book','book_name _id quantity selling_price weight book_img')
     .exec()
     .then(cartItems => {
        
-        if(cartItems.length > 0){
-            const count=  cartItems[0].cart.length
-            if(count > 0){
-                res.status(200).json({
-                    count : count,
-                     cartItems
-                });
-            }else{
-                res.status(404).json({
-                    message : "Cart Is Empty"
-                }); 
+        
+            const count=  cartItems[0].cart
+            console.log(count)
+            
+   
+            for (var { total: prices } of count) {
+             let price = prices;
+             
+              total.push(price)
             }
+            let subtotal = 0;
+        
+              for (let num of total){
+              
+                 subtotal = subtotal + num
+               
+              }
+    
+           
+          
+                res.status(200).json({
+                    count : count.length,
+                     cartItems,
+                     subtotal : subtotal
+                });
+         
        
-        }else{
-            res.status(404).json({
-                message : "Cart Is Empty"
-            }); 
-        }
       
-    })
+      
+    }).catch(err=>{
+        next(err);
+    });
 });
 
 router.put('/update/quantity',checkAuth, (req, res, next) => {
