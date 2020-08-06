@@ -100,23 +100,24 @@ router.get('/User', checkAuth, (req, res, next) => {
     const userId = req.userData.userId;
     console.log(userId);
     let total = [];
+    let weight = [];
+    let subtotal = 0;
     CartItem.find({user: userId})
     .select('_id user cart')
     .populate('cart.book','book_name _id quantity selling_price weight book_img')
     .exec()
     .then(cartItems => {
-       
-        
-            const count=  cartItems[0].cart
-            console.log(count)
+            console.log(cartItems);
+            if(cartItems.length > 0 ){
+               let count=  cartItems[0].cart;
             
    
             for (var { total: prices } of count) {
              let price = prices;
-             
+
               total.push(price)
             }
-            let subtotal = 0;
+            
         
               for (let num of total){
               
@@ -130,10 +131,19 @@ router.get('/User', checkAuth, (req, res, next) => {
                     count : count.length,
                      cartItems,
                      subtotal : subtotal
+                     
                 });
          
        
-      
+       
+            }else{
+                res.status(200).json({
+                     cartItems,
+                     subtotal : subtotal
+                     
+                });
+            }
+            
       
     }).catch(err=>{
         next(err);
