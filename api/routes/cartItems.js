@@ -162,11 +162,13 @@ router.put('/update/quantity', checkAuth, (req, res, next) => {
     const productId = req.query.bookId;
     const quantity = req.query.quantity;
     const price = req.query.price;
+    const weight = req.query.weight;
 
     CartItem.updateOne({ "user": userId, "cart.book": productId }, {
         $set: {
             "cart.$.quantity": quantity,
-            "cart.$.total": quantity * price
+            "cart.$.total": quantity * price,
+            "cart.$.weight": quantity * weight
         }
     })
         .exec()
