@@ -39,7 +39,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
                             quantity: item ? (parseInt(item.quantity) + parseInt(req.query.quantity)) : req.query.quantity,
                             price: req.query.price,
                             total: item ? req.query.price * (parseInt(item.quantity) + parseInt(req.query.quantity)) : (req.query.price * req.query.quantity),
-                            weight: item ? req.query.weight * (parseInt(item.quantity) + parseInt(req.query.quantity)) : (req.query.weight * req.query.quantity)
+                            weight: item ? req.query.weight * (parseInt(item.quantity) + parseInt(req.query.quantity)) : (req.query.weight * req.query.quantity) / 1000
                         }
                     }
                 })
@@ -68,7 +68,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
                             quantity: req.query.quantity,
                             price: req.query.price,
                             total: req.query.quantity * req.query.price,
-                            weight: req.query.quantity * req.query.weight
+                            weight: req.query.quantity * req.query.weight / 1000
                         }
                     ]
                 });
@@ -168,7 +168,7 @@ router.put('/update/quantity', checkAuth, (req, res, next) => {
         $set: {
             "cart.$.quantity": quantity,
             "cart.$.total": quantity * price,
-            "cart.$.weight": quantity * weight
+            "cart.$.weight": quantity * weight / 1000
         }
     })
         .exec()
