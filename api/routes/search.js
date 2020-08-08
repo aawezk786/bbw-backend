@@ -56,21 +56,6 @@ router.get('/',async (req,res,next)=>{
     // });
 });
 
-// router.get('/', (req, res, next) => {
-//     if (req.query.search) {
-//         console.log("OK")
-//       index.search({
-//         query: req.query.search
-//       }, (err, content) => {
-//         res.json({
-//           success: true,
-//           message: "Here is your search",
-//           status: 200,
-//           content: content,
-//           search_result: req.query.search
-//         });
-//       });
-//     }
-//   });
+
 
 module.exports = router;
