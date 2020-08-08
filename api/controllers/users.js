@@ -175,27 +175,34 @@ exports.verification = (req, res, next) => {
     }
 }
 
-//not working update
-exports.updateUser = (req, res, next) => {
-    const id = req.params.UserId;
-    User.update({ _id: id },
-        {   
-            name : req.body.name,
-            phonenumber: req.body.phonenumber,
-            email: req.body.email,
-        }, (err, docs) => {
-            if (err) {
-                res.status(500).json({
-                    error: err
-                });
-            } else {
-                res.status(200).json({
-                    message: "Updated Success",
-                    docs
-                });
-            }
 
-        })
+exports.updateUser  = (req, res, next) => {
+    const id = req.userData.userId;
+    User.find({_id : id})
+    .then(results=>{
+        User.updateOne({ _id: id },
+            {   
+                "local.name" : req.body.name,
+                "local.phonenumber": req.body.phonenumber,
+                "local.email": req.body.email,
+            }, (err, docs) => {
+                if (err) {
+                    res.status(500).json({
+                        error: err
+                    });
+                } else {
+                    res.status(200).json({
+                        message: "Updated Success",
+                        docs
+                    });
+                }
+    
+            })
+    })
+    .catch(err=>{
+        next(err);
+    });
+    
 }
 
 
