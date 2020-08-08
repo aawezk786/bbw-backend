@@ -12,6 +12,7 @@ const cartItemRoutes = require('./api/routes/cartItems');
 const searchRoutes = require('./api/routes/search');
 const wishlistRoutes = require('./api/routes/wishlists');
 const subcategoryRoutes = require('./api/routes/subcategory');
+const userAddressRoutes = require('./api/routes/userAddress');
 
 mongoose.connect(
     'mongodb+srv://zewaa:'
@@ -48,6 +49,7 @@ app.use('/api/filter', filterRoutes);
 app.use('/api/cart', cartItemRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/userAdd', userAddressRoutes);
 app.use('/api/subcategory', subcategoryRoutes);
 
 app.use((req, res, next) => {
