@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+
 const userRoutes = require('./api/routes/users');
 const bookRoutes = require('./api/routes/books');
 const categoryRoutes = require('./api/routes/category');
@@ -13,6 +14,7 @@ const searchRoutes = require('./api/routes/search');
 const wishlistRoutes = require('./api/routes/wishlists');
 const subcategoryRoutes = require('./api/routes/subcategory');
 const userAddressRoutes = require('./api/routes/userAddress');
+
 
 mongoose.connect(
     'mongodb+srv://zewaa:'
@@ -26,11 +28,14 @@ mongoose.connect(
     }
 );
 
+
 mongoose.Promise = global.Promise;
+
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -42,6 +47,7 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.use('/api/user', userRoutes);
 app.use('/api/book', bookRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -52,11 +58,13 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/userAdd', userAddressRoutes);
 app.use('/api/subcategory', subcategoryRoutes);
 
+
 app.use((req, res, next) => {
     const error = new Error('Not Found');
     error.status = 404;
     next(error);
 })
+
 
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
