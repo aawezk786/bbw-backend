@@ -5,7 +5,18 @@ const Order = require('../models/order');
 const CartItem = require('../models/cartItem');
 const UserAddress = require('../models/userAddress');
 const checkAuth = require('../middleware/check-auth');
-
+var cron = require('node-cron');
+const request = require('request');
+let shiprocketToken;
+const options = {
+    url: 'https://apiv2.shiprocket.in/v1/external/auth/login',
+    json: true,
+    method: 'POST',
+    body: {
+        email: 'aawezk786@gmail.com',
+        password: 'aawez123'
+    }
+};
 
 router.post('/create', checkAuth, (req, res, next) => {
     const order = new Order({
