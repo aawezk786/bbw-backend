@@ -5,15 +5,14 @@ const orderSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     order: [
         {
-            book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
-            price: { type: Number, required: true},
-            quantity: Number
+            book: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+            totalprice: { type: Number, required: true},
+            totalquantity: Number,
+            totalweight: Number
         }
     ],
     address: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' },
     orderDate: { type: Date, default: Date.now() },
-    paymentType: String,
-    paymentStatus: String,
     isOrderCompleted: { type: Boolean, default: false }
 });
 
