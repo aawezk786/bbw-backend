@@ -45,7 +45,7 @@ router.post('/create', checkAuth, (req, res, next) => {
             var params = {
                 amount: order.order[0].amount * 100,  
                 currency: "INR",
-                receipt: order.order[0].receipt,
+                receipt: req.userData.userId,
                 payment_capture: '1'
               };
               instance.orders.create(params).then(data=>{
