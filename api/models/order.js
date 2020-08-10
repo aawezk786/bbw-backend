@@ -6,8 +6,11 @@ const orderSchema = mongoose.Schema({
     order: [
         {
             book: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
-            totalprice: { type: Number, required: true},
-            totalquantity: Number,
+            amount: { type: Number},
+            receipt : String,
+            currency : {type:String,default : "INR"},
+            payment_capture :{type :Number,default : 1},
+            totalitems: Number,
             totalweight: Number
         }
     ],

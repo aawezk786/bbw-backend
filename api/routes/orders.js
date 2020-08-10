@@ -18,38 +18,96 @@ const options = {
     }
 };
 
+var crypto = require('crypto');
+var Razorpay = require('razorpay');
+
+let instance = new Razorpay({
+    key_id: 'rzp_test_wsDPvMUuPkTgca', // your `KEY_ID`
+    key_secret: 'Y4xVb0hA2BcQUDldBa15b8Tl' // your `KEY_SECRET`
+  })
+
+
+
+
 router.post('/create', checkAuth, (req, res, next) => {
-    const order = new Order({
+    var order = new Order({
         _id: new mongoose.Types.ObjectId(),
         user: req.userData.userId,
         order: req.body.order,
-        address: req.body.address
+        address: "5f2e650e1935c41df451684e"
     });
-
+   
+    
     order.save()
-    .then(order => {
+    .then( order => {
+        
+        
+            var params = {
+                amount: order.order[0].amount * 100,  
+                currency: "INR",
+                receipt: order.order[0].receipt,
+                payment_capture: '1'
+              };
+              instance.orders.create(params).then(data=>{
+                console.log(data)
+               return res.send({'sub':data,"status":"success"});
+            }).catch(error =>{
+                console.log(error)
+                res.send({"sub":error,"status": "failed"})
+            });
+       
+     
 
-        CartItem.remove({"user": req.userData.userId})
+
+        CartItem.deleteOne({"user": req.userData.userId})
         .exec()
-        .then(doc => {
-            res.status(201).json({
-                message: order
-            });
-        })
+        .then(doc => {doc})
         .catch(error => {
-            res.status(500).json({
-                error: error
-            });
+         next(error)
         })
 
 
         
     })
     .catch(error => {
-        res.status(500).json({
-            error: error
-        });
+       next(error)
     })
+
+   
+})
+
+router.post('/verify',(req,res)=>{
+    // var options = {
+    //     "key_id": "rzp_test_wsDPvMUuPkTgca",  //Enter your razorpay key
+    //     "key_secret" : "Y4xVb0hA2BcQUDldBa15b8Tl",
+    //     "currency": "INR",
+    //     "name": "Razor Tutorial",
+    //     "description": "Razor Test Transaction",
+    //     "image": "https://previews.123rf.com/images/subhanbaghirov/subhanbaghirov1605/subhanbaghirov160500087/56875269-vector-light-bulb-icon-with-concept-of-idea-brainstorming-idea-illustration-.jpg",
+    //     "order_id": 'order_FP3MqLlhgPNsos',
+    //     "handler": {
+    //        "razorpay_order_id" : "order_FP3MqLlhgPNsos",
+    //         "razorpay_signature": "6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5e870ee3c60"
+    //     }
+    
+    //     ,
+    //     "theme": {
+    //         "color": "#227254"
+    //     }
+    // };
+    // var rzp1 = new Razorpay(options);
+    
+    body='order_FP3MqLlhgPNsos' + "|" + req.body.razorpay_payment_id;
+var expectedSignature = crypto.createHmac('sha256', 'Y4xVb0hA2BcQUDldBa15b8Tl')
+                                .update(body.toString())
+                                .digest('hex');
+                                console.log("sig"+"6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5e870ee3c60");
+                                console.log("sig"+expectedSignature);
+var response = {"status":"failure"}
+if(expectedSignature === '6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5e870ee3c60')
+ response={"status":"success"}
+   return res.send(response);
+    
 })
 
 router.get('/getorders',checkAuth, (req, res, next) => {
@@ -96,6 +154,8 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     });
 
 });
+
+
 
 
 // cron.schedule('* * * * *', () => {
