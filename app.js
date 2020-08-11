@@ -15,6 +15,7 @@ const wishlistRoutes = require('./api/routes/wishlists');
 const subcategoryRoutes = require('./api/routes/subcategory');
 const userAddressRoutes = require('./api/routes/userAddress');
 const orderRoutes = require('./api/routes/orders');
+const adminRoutes = require('./api/routes/admins');
 
 mongoose.connect(
     'mongodb+srv://zewaa:'
@@ -58,6 +59,7 @@ app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/userAdd', userAddressRoutes);
 app.use('/api/subcategory', subcategoryRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');
