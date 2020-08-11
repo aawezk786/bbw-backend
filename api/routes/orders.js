@@ -33,17 +33,24 @@ router.post('/create', checkAuth, (req, res, next) => {
     var order = new Order({
         _id: new mongoose.Types.ObjectId(),
         user: req.userData.userId,
-        order: req.body.order,
+        order: {
+           book : req.body.book,
+           amount : req.body.amount,
+           totalitems: req.body.totalitems,
+           totalweight: req.body.totalweight,
+           
+        },
         address: "5f2e650e1935c41df451684e"
     });
    
-    
+    let amount = req.body.amount;
+    console.log(amount)
     order.save()
     .then( order => {
         
         
             var params = {
-                amount: order.order[0].amount * 100,  
+                amount: amount * 100,  
                 currency: "INR",
                 receipt: req.userData.userId,
                 payment_capture: '1'
@@ -116,34 +123,35 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     Order.find({"user": userId})
     .select('address order orderDate  isOrderCompleted')
     .populate('order.book', 'book_name selling_price weight')
+    .populate('address')
     .exec()
     .then(orders => {
+        console.log(orders)
+        // UserAddress.findOne({"user": userId})
+        // .exec()
+        // .then(userAddress => {
 
-        UserAddress.findOne({"user": userId})
-        .exec()
-        .then(userAddress => {
-
-            const orderWithAddress = orders.map(order => {
-                const address = userAddress.address.find(userAdd => order.address.equals(userAdd._id));
-                return {
-                    _id: order._id,
-                    order: order.order,
-                    address: address,
-                    orderDate: order.orderDate,
-                    isOrderComleted: order.isOrderComleted
-                }
-            });
+        //     const orderWithAddress = orders.map(order => {
+        //         const address = userAddress.address.find(userAdd => order.address.equals(userAdd._id));
+        //         return {
+        //             _id: order._id,
+        //             order: order.order,
+        //             address: address,
+        //             orderDate: order.orderDate,
+        //             isOrderComleted: order.isOrderComleted
+        //         }
+        //     });
 
             res.status(200).json({
-                message: orderWithAddress
+                message: orders
             });
 
-        })
-        .catch(error => {
-            return res.status(500).json({
-                error: error
-            })
-        })
+        // })
+        // .catch(error => {
+        //     return res.status(500).json({
+        //         error: error
+        //     })
+        // })
 
         
     })

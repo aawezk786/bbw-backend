@@ -12,7 +12,9 @@ const orderSchema = mongoose.Schema({
             payment_capture :{type :Number,default : 1},
             totalitems: Number,
             totalweight: Number
-        }
+            
+        },
+        
     ],
     address: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' },
     orderDate: { type: Date, default: Date.now() },
