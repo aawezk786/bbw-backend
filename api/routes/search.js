@@ -19,6 +19,8 @@ router.get('/',async (req,res)=>{
       books :products
     });
   }
+
+
   if(req.query.author_name == '1'){
     let searchKeyword = req.query.searchKeyword
     ? {
@@ -35,6 +37,44 @@ router.get('/',async (req,res)=>{
       books :products
     });
   }
+
+
+  if(req.query.publisher == '1'){
+    let searchKeyword = req.query.searchKeyword
+    ? {
+        publisher: {
+          $regex: req.query.searchKeyword,
+          $options: 'i',
+        },
+      }
+    : {};
+    let products = await Book.find({ ...searchKeyword });
+   return res.status(200).json({
+      success: true,
+      count : products.length +" " + "Results found",
+      books :products
+    });
+  }
+
+
+  if(req.query.isbn == '1'){
+    let searchKeyword = req.query.searchKeyword
+    ? {
+        Isbn_no: {
+          $regex: req.query.searchKeyword,
+          $options: 'i',
+        },
+      }
+    : {};
+    let products = await Book.find({ ...searchKeyword });
+   return res.status(200).json({
+      success: true,
+      count : products.length +" " + "Results found",
+      books :products
+    });
+  }
+
+  
   res.json({
     message : "Check query"
   });
