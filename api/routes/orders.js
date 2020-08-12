@@ -22,25 +22,25 @@ var crypto = require('crypto');
 var Razorpay = require('razorpay');
 
 let instance = new Razorpay({
-    key_id: 'rzp_test_wsDPvMUuPkTgca', // your `KEY_ID`
-    key_secret: 'Y4xVb0hA2BcQUDldBa15b8Tl' // your `KEY_SECRET`
+    key_id: 'rzp_test_wsDPvMUuPkTgca', 
+    key_secret: 'Y4xVb0hA2BcQUDldBa15b8Tl' 
   })
 
 
 
 
 router.post('/create', checkAuth, (req, res, next) => {
-    var order = new Order({
+    const order = new Order({
         _id: new mongoose.Types.ObjectId(),
         user: req.userData.userId,
-        order: {
+        order: [{
            book : req.body.book,
            amount : req.body.amount,
            totalitems: req.body.totalitems,
            totalweight: req.body.totalweight,
-           
-        },
-        address: "5f2e650e1935c41df451684e"
+           address: req.query.address
+        }],
+        
     });
    
     let amount = req.body.amount;
@@ -118,41 +118,39 @@ if(expectedSignature === '6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5
 })
 
 router.get('/getorders',checkAuth, (req, res, next) => {
-
+    const val = false;
     const userId = req.userData.userId;
-    Order.find({"user": userId})
-    .select('address order orderDate  isOrderCompleted')
+    Order.find({"user": userId,"isOrderCompleted" : val})
+    .select('order  isOrderCompleted orderDate')
     .populate('order.book', 'book_name selling_price weight')
-    .populate('address')
+    .populate('user' , 'local.name local.local_email local.phonenumber _id')
     .exec()
     .then(orders => {
-        console.log(orders)
-        // UserAddress.findOne({"user": userId})
-        // .exec()
-        // .then(userAddress => {
-
-        //     const orderWithAddress = orders.map(order => {
-        //         const address = userAddress.address.find(userAdd => order.address.equals(userAdd._id));
-        //         return {
-        //             _id: order._id,
-        //             order: order.order,
-        //             address: address,
-        //             orderDate: order.orderDate,
-        //             isOrderComleted: order.isOrderComleted
-        //         }
-        //     });
-
-            res.status(200).json({
-                message: orders
+        UserAddress.findOne({"user": userId})
+        .exec()
+        .then(userAddress => {
+            let orderWithAddress = orders.map(order => {
+                
+                let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
+                return {
+                    _id: order._id,
+                    order: order.order,
+                    address: address,
+                    orderDate: order.orderDate,
+                    isOrderComleted: order.isOrderCompleted
+                }
             });
 
-        // })
-        // .catch(error => {
-        //     return res.status(500).json({
-        //         error: error
-        //     })
-        // })
+            res.status(200).json({
+                orderDetails : orderWithAddress
+            });
 
+        })
+        .catch(error => {
+            return res.status(500).json({
+                error: error
+            })
+        })
         
     })
     .catch(error => {
