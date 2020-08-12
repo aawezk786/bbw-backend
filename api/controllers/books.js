@@ -209,3 +209,53 @@ exports.getBooksByCats = (req, res, next) => {
             });
     });
 }
+
+
+exports.book_single_post = (req,res,next) =>{
+    console.log(req.files)
+    const product = new Book({
+        _id : new mongoose.Types.ObjectId(),
+        book_name : req.body.book_name,
+        author_name : req.body.author_name,
+        Isbn_no : req.body.Isbn_no,
+        book_img: [
+            req.files[0].location,
+            req.files[1].location,
+            req.files[2].location
+        ],
+        publisher : req.body.publisher,
+        condition : req.body.condition,
+        print_type : req.body.print_type,
+        mrp : req.body.mrp,
+        selling_price : req.body.selling_price,
+        saved_price : req.body.saved_price,
+        sale_price : req.body.sale_price,
+        description : req.body.description,
+        publication_year : req.body.publication_year,
+        quantity : req.body.quantity,
+        no_Of_pages : req.body.no_Of_pages,
+        language : req.body.language,
+        dimensions : req.body.dimensions,
+        weight : req.body.weight,
+        categories : mongoose.Types.ObjectId(req.body.categories),
+        sku : req.body.sku
+
+    })
+
+    product.save().then(result => {
+        console.log(result);
+        res.status(201).json({
+            message: 'Created Product Successfully',
+            createdProduct: {
+                name: result.name,
+                price: result.price,
+                _id: result._id
+            }
+        });
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+}

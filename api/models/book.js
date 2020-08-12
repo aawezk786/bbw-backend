@@ -82,8 +82,7 @@ const bookSchema = mongoose.Schema({
         
     },
     excel_file : {
-        type : String,
-        required : true
+        type : String
     }
 },{
     toObject : {virtuals : true},
