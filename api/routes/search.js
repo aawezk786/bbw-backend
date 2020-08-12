@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/book');
 
-router.get('/',async (req,res,next)=>{
+router.get('/',async (req,res)=>{
   if(req.query.book_name == '1'){
     let searchKeyword = req.query.searchKeyword
     ? {
