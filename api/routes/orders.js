@@ -161,7 +161,49 @@ router.get('/getorders',checkAuth, (req, res, next) => {
 
 });
 
+router.get('/getallorders',checkAuth, (req, res, next) => {
+    const val = false;
+    const userId = req.userData.userId;
+    Order.find({"isOrderCompleted" : val})
+    .select('order  isOrderCompleted orderDate')
+    .populate('order.book', 'book_name selling_price weight')
+    .populate('user' , 'local.name local.local_email local.phonenumber _id')
+    .exec()
+    .then(orders => {
+        UserAddress.findOne({})
+        .exec()
+        .then(userAddress => {
+            let orderWithAddress = orders.map(order => {
+                
+                let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
+                return {
+                    _id: order._id,
+                    order: order.order,
+                    address: address,
+                    orderDate: order.orderDate,
+                    isOrderComleted: order.isOrderCompleted
+                }
+            });
 
+            res.status(200).json({
+                orderDetails : orderWithAddress
+            });
+
+        })
+        .catch(error => {
+            return res.status(500).json({
+                error: error
+            })
+        })
+        
+    })
+    .catch(error => {
+        res.status(500).json({
+            error: error
+        });
+    });
+
+});
 
 
 // cron.schedule('* * * * *', () => {
