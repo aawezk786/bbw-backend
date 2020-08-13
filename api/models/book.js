@@ -77,9 +77,19 @@ const bookSchema = mongoose.Schema({
         ref: 'Category'
         
     },
+    subcategory1 : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'Subcategory'
+    },
     sku : {
         type : String,
         
+    },
+    country_origin :{
+        type : String
+    },
+    discount_per:{
+        type : String
     },
     excel_file : {
         type : String

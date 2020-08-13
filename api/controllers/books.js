@@ -6,37 +6,40 @@ const Category = require('../models/category');
 
 
 exports.saveBooks = (req, res, next) => {
-    const wb = xlsx.readFile(req.file.path);
-    const ws = wb.SheetNames;
-    const we = wb.Sheets[ws];
-    const data = xlsx.utils.sheet_to_json(we);
+    let wb = xlsx.readFile(req.file.path);
+    let ws = wb.SheetNames;
+    let we = wb.Sheets[ws];   
+    let data = xlsx.utils.sheet_to_json(we);
     data.map((record) => {
-        const book_name = record.book_name;
-        const author_name = record.author_name;
-        const Isbn_no = record.Isbn_no;
-        const publisher = record.publisher;
-        const condition = record.condition;
-        const print_type = record.print_type;
-        const mrp = record.mrp;
-        const selling_price = record.selling_price;
-        const saved_price = record.saved_price;
-        const sale_price = record.sale_price;
-        const description = record.description;
-        const publication_year = record.publication_year;
-        const no_Of_pages = record.no_Of_pages;
-        const language = record.language;
-        const dimensions = record.dimensions;
-        const weight = record.weight;
-        const categories = record.categories;
-        const quantity = record.quantity;
-        const sku = record.sku;
-        const book_img = [
+        let book_name = record.book_name;
+        let author_name = record.author_name;
+        let Isbn_no = record.Isbn_no;
+        let publisher = record.publisher;
+        let condition = record.condition;
+        let print_type = record.print_type;
+        let mrp = record.mrp;
+        let selling_price = record.selling_price;
+        let saved_price = record.saved_price;
+        let sale_price = record.sale_price;
+        let description = record.description;
+        let publication_year = record.publication_year;
+        let no_Of_pages = record.no_Of_pages;
+        let language = record.language;
+        let dimensions = record.dimensions;
+        let weight = record.weight;
+        let categories = record.categories;
+        let subcategory1 = record.subcategory1;
+        let quantity = record.quantity;
+        let sku = record.sku;
+        let country_origin = record.country_origin;
+        let book_img = [
             record.book_img1,
             record.book_img2,
             record.book_img3,
             record.book_img4
         ];
-        const books = new Book({
+        let discount_per = record.discount_per;
+        let books = new Book({
             _id: new mongoose.Types.ObjectId(),
             book_name: book_name,
             author_name: author_name,
@@ -57,7 +60,10 @@ exports.saveBooks = (req, res, next) => {
             dimensions: dimensions,
             weight: weight,
             categories: mongoose.Types.ObjectId(categories),
+            subcategory1 : mongoose.Types.ObjectId(subcategory1),
             sku: sku,
+            country_origin : country_origin,
+            discount_per : discount_per,
             excel_file: req.file.path
         });
         books.save().then(result => {
@@ -88,7 +94,8 @@ exports.getAllBooks = (req, res, next) => {
         },
         function (callback) {
             Book.find({})
-                .populate('categories', 'category subcategory')
+                .populate('categories', 'category')
+                .populate('subcategory1')
                 .exec((err, books) => {
                     if (err) return next(err);
                     callback(err, books);
