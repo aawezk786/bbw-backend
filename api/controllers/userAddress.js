@@ -12,7 +12,16 @@ exports.addAddress =(req, res, next) => {
 
             UserAddress.findOneAndUpdate({"user": userId}, {
                 $push: {
-                    "address": req.body.address
+                    "address": [{
+                        mobileNumber : req.body.mobileNumber,
+                        pinCode : req.body.pinCode,
+                        locality : req.body.locality,
+                        address : req.body.address,
+                        city : req.body.city,
+                        state : req.body.state,
+                        landmark : req.body.landmark,
+                        alternatePhoneNummber : req.body.alternatePhoneNummber
+                    }]
                 }
             }, {
                 new: true
@@ -28,7 +37,16 @@ exports.addAddress =(req, res, next) => {
             const userAddress = new UserAddress({
                 _id: new mongoose.Types.ObjectId(),
                 user: userId,
-                address: req.body.address
+                address: [{
+                    mobileNumber : req.body.mobileNumber,
+                    pinCode : req.body.pinCode,
+                    locality : req.body.locality,
+                    address : req.body.address,
+                    city : req.body.city,
+                    state : req.body.state,
+                    landmark : req.body.landmark,
+                    alternatePhoneNummber : req.body.alternatePhoneNummber
+                }]
             });
 
             userAddress.save()
