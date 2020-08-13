@@ -138,6 +138,30 @@ exports.latestBooks =  (req, res, next) => {
 
 }
 
+exports.popularbook =  (req, res, next) => {
+
+    const mysort = { _id: 1 };
+    async.parallel([
+        function (callback) {
+            Book.find({}).sort(mysort)
+                .limit(5)
+                .populate('categories')
+                .exec((err, books) => {
+                    if (err) return next(err);
+                    callback(err, books);
+                });
+        }
+    ], function (err, results) {
+        var books = results[0];
+        res.status(200).json({
+            success: true,
+            books: books,
+            totalBooks: books.length
+        });
+    })
+
+}
+
 
 exports.deleteBooks = (req, res, next) => {
     const id = req.params.bookId;

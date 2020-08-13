@@ -47,6 +47,7 @@ const upload = multer({
 router.post('/saveBook', upload.single('excel_file'), BooksControllers.saveBooks);
 router.delete('/:bookId', BooksControllers.deleteBooks);
 router.get('/latest', BooksControllers.latestBooks);
+router.get('/popular', BooksControllers.popularbook);
 router.get('/', BooksControllers.getAllBooks);
 router.get('/:bookId', BooksControllers.detailBooks);
 router.get('/categories/:catId', BooksControllers.getBooksByCats);
