@@ -31,7 +31,7 @@ exports.addAddress =(req, res, next) => {
                     message: doc
                 });
             });
-
+            
         }else{
 
             const userAddress = new UserAddress({
@@ -56,9 +56,7 @@ exports.addAddress =(req, res, next) => {
                 });
             })
             .catch(error => {
-                res.status(500).json({
-                    error: error
-                });
+              next(error);
             })
 
         }
@@ -97,7 +95,16 @@ exports.EditAdd = (req,res,next)=>{
     UserAddress.find({"user": req.userData.userId})
     .then(result=>{
         UserAddress.update({"address._id": req.params.addressId },{
-            address : req.body.address
+            address : [{
+                mobileNumber : req.body.mobileNumber,
+                pinCode : req.body.pinCode,
+                locality : req.body.locality,
+                address : req.body.address,
+                city : req.body.city,
+                state : req.body.state,
+                landmark : req.body.landmark,
+                alternatePhoneNummber : req.body.alternatePhoneNummber
+            }]
         },(err,docs)=>{
             if (err) {
                 res.status(500).json({
