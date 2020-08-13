@@ -8,6 +8,7 @@ router.post('/signup', UsersController.user_signup);
 router.post('/verify', UsersController.verification);
 router.post('/login', UsersController.user_login);
 router.get('/', UsersController.getall_users);
+router.get('/ById',checkAuth, UsersController.get_userId);
 router.patch('/',checkAuth, UsersController.updateUser);
 router.delete('/:UserId', UsersController.user_delete);
 router.post('/sendOtp/:Phone' ,UsersController.sendOtp);

@@ -116,6 +116,32 @@ exports.getall_users = (req, res, next) => {
 
 }
 
+exports.get_userId = (req, res, next) => {
+    async.parallel([
+        function (callback) {
+            User.countDocuments({}, (err, count) => {
+                var totaluser = count;
+                callback(err, totaluser);
+
+            });
+        },
+        function (callback) {
+            User.find({"_id" : req.userData.userId})
+                .exec((err, users) => {
+                    if (err) return next(err);
+                    callback(err, users);
+                });
+        }
+    ], function (err, results) {
+        var totaluser = results[0];
+        var users = results[1];
+        res.status(200).json(
+            users
+        );
+        if (err) return next(err);
+    });
+
+}
 
 exports.verification = (req, res, next) => {
 
