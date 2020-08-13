@@ -212,11 +212,13 @@ exports.updateUser = (req, res, next) => {
     const id = req.userData.userId;
     User.find({ _id: id })
         .then(results => {
-            User.updateOne({ _id: id },
+            console.log(results[0].methods)
+            if(results[0].methods == 'local'){
+                 User.updateOne({ _id: id },
                 {
                     "local.name": req.body.name,
                     "local.phonenumber": req.body.phonenumber,
-                    "local.email": req.body.email,
+                    "local.local_email": req.body.email,
                 }, (err, docs) => {
                     if (err) {
                         res.status(500).json({
@@ -230,6 +232,46 @@ exports.updateUser = (req, res, next) => {
                     }
 
                 })
+            }
+            if(results[0].methods == 'google'){
+                User.updateOne({ _id: id },
+                    {
+                        "google.name": req.body.name,
+                        "google.google_email": req.body.email,
+                    }, (err, docs) => {
+                        if (err) {
+                            res.status(500).json({
+                                error: err
+                            });
+                        } else {
+                            res.status(200).json({
+                                message: "Updated Success",
+                                docs
+                            });
+                        }
+    
+                    })
+            }
+            if(results[0].methods == 'facebook'){
+                User.updateOne({ _id: id },
+                    {
+                        "facebook.name": req.body.name,
+                        "facebook.facebook_email": req.body.email,
+                    }, (err, docs) => {
+                        if (err) {
+                            res.status(500).json({
+                                error: err
+                            });
+                        } else {
+                            res.status(200).json({
+                                message: "Updated Success",
+                                docs
+                            });
+                        }
+    
+                    })
+            }
+           
         })
         .catch(err => {
             next(err);
