@@ -17,7 +17,7 @@ exports.addAddress =(req, res, next) => {
             const userAddress = new UserAddress({
                 _id: new mongoose.Types.ObjectId(),
                 user: userId,
-                
+                address: {
                     mobileNumber : req.body.mobileNumber,
                     pinCode : req.body.pinCode,
                     locality : req.body.locality,
@@ -26,7 +26,7 @@ exports.addAddress =(req, res, next) => {
                     state : req.body.state,
                     landmark : req.body.landmark,
                     alternatePhoneNumber : req.body.alternatePhoneNumber
-                
+                }
             });
 
             userAddress.save()
