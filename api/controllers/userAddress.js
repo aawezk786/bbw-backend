@@ -20,7 +20,7 @@ exports.addAddress =(req, res, next) => {
                 address: {
                     mobileNumber : req.body.mobileNumber,
                     pinCode : req.body.pinCode,
-                    locality : req.body.locality,
+                    fullName : req.body.fullName,
                     address : req.body.address,
                     city : req.body.city,
                     state : req.body.state,
@@ -79,7 +79,7 @@ exports.EditAdd = (req,res,next)=>{
             {   
                 "address.mobileNumber" : req.body.mobileNumber,
                 "address.pinCode" : req.body.pinCode,
-                "address.locality" : req.body.locality,
+                "address.fullName" : req.body.fullName,
                 "address.address" : req.body.address,
                 "address.city": req.body.city,
                 "address.state": req.body.state,
