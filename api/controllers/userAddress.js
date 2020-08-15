@@ -6,31 +6,46 @@ exports.addAddress =(req, res, next) => {
     const userId = req.userData.userId;
     UserAddress.findOne({"user": userId})
     .exec()
-    .then(user => {
+    .then(result => {
 
-        if(user){
-            UserAddress.findOneAndUpdate({"user": userId}, {
-                $push: {
-                    "address" : {
-                        "mobileNumber" : req.body.mobileNumber,
-                    "pinCode" : req.body.pinCode,
-                    "fullName" : req.body.fullName,
-                    "address" : req.body.address,
-                    "city": req.body.city,
-                    "state": req.body.state,
-                    "landmark": req.body.landmark,
-                    "alternatePhoneNumber": req.body.alternatePhoneNumber
+        if(result){
+            let item = result.address.find(item => item._id == req.query.add);
+            let where, action, set;
+            if (item) {
+                action = "$set";
+                where = { "user": userId, "address._id": req.query.add };
+                set = "address.$";
+            } else {
+                action = "$push";
+                where = { "user": userId };
+                set = "address"
+            }
+            UserAddress.findOneAndUpdate(where, {
+                [action]: {
+                    [set]: {
+                        _id: item ? item._id : new mongoose.Types.ObjectId(),
+                        mobileNumber: req.body.mobileNumber,
+                        pinCode:   req.body.pinCode,
+                        fullName: req.body.fullName,
+                        address: req.body.address,
+                        city: req.body.city,
+                        state: req.body.state,
+                        landmark: req.body.landmark,
+                        alternatePhoneNumber: req.body.alternatePhoneNumber
                     }
-                    
                 }
-            }, {
-                new: true
             })
-            .then(doc => {
-                res.status(201).json({
-                    message: doc
+                .exec()
+                .then(newItem => {
+                    res.status(201).json({
+                        message: "Update Address"
+                    })
+                })
+                .catch(error => {
+                    res.status(500).json({
+                        message: error
+                    });
                 });
-            });
        
             
         }else{
@@ -92,75 +107,20 @@ exports.getAddByUser =(req, res, next) => {
 }
 
 
-exports.EditAdd = (req,res,next)=>{
-    UserAddress.find({"user": req.userData.userId})
-    .then(result=>{
-        console.log(result)
-        UserAddress.updateOne({ "user": req.userData.userId ,"address._id" : req.params.add},
-            {   
-                address : {
-                    "mobileNumber" : req.body.mobileNumber,
-                "pinCode" : req.body.pinCode,
-                "fullName" : req.body.fullName,
-                "address" : req.body.address,
-                "city": req.body.city,
-                "state": req.body.state,
-                "landmark": req.body.landmark,
-                "alternatePhoneNumber": req.body.alternatePhoneNumber
-                }
-                
-            
-            }, (err, docs) => {
-                if (err) {
-                    res.status(500).json({
-                        error: err
-                    });
-                } else {
-                    res.status(200).json({
-                        message: "Updated Success",
-                        docs
-                    });
-                }
 
-            })
-        // UserAddress.update({"address._id": req.params.addressId },{
-        //     address : {
-        //         mobileNumber : req.body.mobileNumber,
-        //         pinCode : req.body.pinCode,
-        //         locality : req.body.locality,
-        //         address : req.body.address,
-        //         city : req.body.city,
-        //         state : req.body.state,
-        //         landmark : req.body.landmark,
-        //         alternatePhoneNumber : req.body.alternatePhoneNumber
-        //     }
-        // },(err,docs)=>{
-        //     if (err) {
-        //         res.status(500).json({
-        //             error: err
-        //         });
-        //     } else {
-        //         res.status(200).json({
-        //             message: "Updated Success",
-        //             docs
-        //         });
-        //     }
-        // })
-       
-    })
-    .catch(err=>{
-        next(err)
-    })
-}
 
 exports.add_delete = (req, res, next) => {
-    const id = req.userData.userId;
-    UserAddress.deleteOne({ "user": id }).exec()
+   
+    const id = req.params.add;
+    const userId = req.userData.userId
+    UserAddress.findOneAndUpdate({ user: userId }, { $pull: { "address": { _id: id } } }).exec()
         .then(result => {
-            res.status(200).json({
-                message: "Address deleted Successfully",
-                result
-            });
+            if (result) {
+                res.status(200).json({
+                    message: "Address deleted Successfully"
+                });
+            }
+
         })
         .catch(err => {
             res.status(500).json({
