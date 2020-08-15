@@ -30,7 +30,7 @@ let instance = new Razorpay({
 
 
 router.post('/create', checkAuth, (req, res, next) => {
-    const order = new Order({
+    let order = new Order({
         _id: new mongoose.Types.ObjectId(),
         user: req.userData.userId,
         order: [{
@@ -123,14 +123,16 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     Order.find({"user": userId,"isOrderCompleted" : val})
     .select('order  isOrderCompleted orderDate')
     .populate('order.book', 'book_name selling_price weight')
-    .populate('user' , 'local.name local.local_email local.phonenumber _id')
+    .populate('user' , ' _id')
     .exec()
     .then(orders => {
-        UserAddress.findOne({"user": userId})
+        console.log(orders)
+        UserAddress.find({"user": userId})
         .exec()
         .then(userAddress => {
+            console.log(userAddress)
             let orderWithAddress = orders.map(order => {
-                
+                console.log(order)
                 let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
                 return {
                     _id: order._id,

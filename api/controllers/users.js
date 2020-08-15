@@ -66,7 +66,7 @@ exports.user_login = (req, res, next) => {
                     },
                         process.env.JWT_KEY,
                         {
-                            expiresIn: "8d"
+                            expiresIn: "30d"
                         });
                     return res.status(200).json({
                         message: "Auth Successfull",
@@ -174,10 +174,22 @@ exports.verification = (req, res, next) => {
                             });
                             user.save()
                                 .then(result => {
-                                    console.log(result);
-                                    return res.status(201).json({
-                                        message: 'Register Successfull'
-                                    });
+                                    if(result){
+                                        const token = jwt.sign({
+                                            name: result[0].local.name,
+                                            email: result[0].local.local_email,
+                                            userId: result[0]._id
+                                        },
+                                            process.env.JWT_KEY,
+                                            {
+                                                expiresIn: "30d"
+                                            });
+                                        return res.status(200).json({
+                                            message: "Auth Successfull",
+                                            token: token
+                                        });
+                                    }
+                                    
                                 })
                                 .catch(err => {
                                     console.log(err);

@@ -9,8 +9,29 @@ exports.addAddress =(req, res, next) => {
     .then(user => {
 
         if(user){
-
-        res.json("Address Already Present");
+            UserAddress.findOneAndUpdate({"user": userId}, {
+                $push: {
+                    "address" : {
+                        "mobileNumber" : req.body.mobileNumber,
+                    "pinCode" : req.body.pinCode,
+                    "fullName" : req.body.fullName,
+                    "address" : req.body.address,
+                    "city": req.body.city,
+                    "state": req.body.state,
+                    "landmark": req.body.landmark,
+                    "alternatePhoneNumber": req.body.alternatePhoneNumber
+                    }
+                    
+                }
+            }, {
+                new: true
+            })
+            .then(doc => {
+                res.status(201).json({
+                    message: doc
+                });
+            });
+       
             
         }else{
 
@@ -28,7 +49,7 @@ exports.addAddress =(req, res, next) => {
                     alternatePhoneNumber : req.body.alternatePhoneNumber
                 }
             });
-
+            
             userAddress.save()
             .then(doc => {
                 res.status(201).json({
@@ -75,16 +96,19 @@ exports.EditAdd = (req,res,next)=>{
     UserAddress.find({"user": req.userData.userId})
     .then(result=>{
         console.log(result)
-        UserAddress.updateOne({ "user": req.userData.userId },
+        UserAddress.updateOne({ "user": req.userData.userId ,"address._id" : req.params.add},
             {   
-                "address.mobileNumber" : req.body.mobileNumber,
-                "address.pinCode" : req.body.pinCode,
-                "address.fullName" : req.body.fullName,
-                "address.address" : req.body.address,
-                "address.city": req.body.city,
-                "address.state": req.body.state,
-                "address.landmark": req.body.landmark,
-                "address.alternatePhoneNumber": req.body.alternatePhoneNumber
+                address : {
+                    "mobileNumber" : req.body.mobileNumber,
+                "pinCode" : req.body.pinCode,
+                "fullName" : req.body.fullName,
+                "address" : req.body.address,
+                "city": req.body.city,
+                "state": req.body.state,
+                "landmark": req.body.landmark,
+                "alternatePhoneNumber": req.body.alternatePhoneNumber
+                }
+                
             
             }, (err, docs) => {
                 if (err) {
