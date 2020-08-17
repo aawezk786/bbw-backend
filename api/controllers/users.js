@@ -29,6 +29,7 @@ exports.user_signup = (req, res, next) => {
 
                         );
                     }).catch(err => {
+                        console.log(err)
                         res.status(400).json("Check Phonenumber");
                     });
 
@@ -174,18 +175,19 @@ exports.verification = (req, res, next) => {
                             });
                             user.save()
                                 .then(result => {
+                                   
                                     if(result){
                                         const token = jwt.sign({
-                                            name: result[0].local.name,
-                                            email: result[0].local.local_email,
-                                            userId: result[0]._id
+                                            name: result.local.name,
+                                            email: result.local.local_email,
+                                            userId: result._id
                                         },
                                             process.env.JWT_KEY,
                                             {
                                                 expiresIn: "30d"
                                             });
                                         return res.status(200).json({
-                                            message: "Auth Successfull",
+                                            message: "Register Successfull",
                                             token: token
                                         });
                                     }
