@@ -96,7 +96,8 @@ router.get('/books',async (req,res)=>{
    return res.status(200).json({
       success: true,
       count : products.length +" " + "Results found",
-      books :products
+      books :products,
+      totalBooks : products.length
     });
   }
 
@@ -123,7 +124,7 @@ if (asc) {
     const mysort = { selling_price: 1 };
     Book.countDocuments({condition : "New"}, (err, count) => {
         var totalBooks = count;
-        Book.find().sort(mysort).exec()
+        Book.find({condition : "New"}).sort(mysort).exec()
             .then(result => {
                 res.status(200).json({
                     success: true,
@@ -142,7 +143,7 @@ if (asc) {
 
 if (desc) {
     const mysort = { selling_price: -1 };
-    Book.countDocuments({}, (err, count) => {
+    Book.countDocuments({condition : "New"}, (err, count) => {
         var totalBooks = count;
         Book.find({condition : "New"}).sort(mysort).exec()
             .then(result => {
@@ -166,6 +167,33 @@ if(!asc && !desc){
         message : "Check Query"
     });
 }
+});
+
+
+
+router.get('/priceDefined/:first/:second',(req, res, next) => {
+  
+  const first = req.params.first;
+  const second = req.params.second;
+ 
+  Book.countDocuments({ selling_price: { $gte: (first), $lte: (second) } ,condition : "New" } , (err, count) => {
+      var totalBooks = count;
+      const mysort = { selling_price: 1 };
+      Book.find({ selling_price: { $gte: (first), $lte: (second) },condition : "New" }).sort(mysort).exec()
+          .then(result => {
+              res.status(200).json({
+                  success: true,
+                  books: result,
+                  totalBooks: totalBooks,
+              });
+          })
+          .catch(error => {
+              res.status(500).json({
+                  error: error
+              });
+          });
+  });
+
 });
 
 module.exports = router;
