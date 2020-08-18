@@ -117,7 +117,7 @@ router.get('/books',async (req,res)=>{
     
 });
 
-router.get('/filter',(req,res)=>{
+router.get('/filter/new',(req,res)=>{
 var asc = req.query.sortBy =='asc';
 var desc = req.query.sortBy == 'desc';
 if (asc) {
@@ -169,22 +169,75 @@ if(!asc && !desc){
 }
 });
 
-
+router.get('/filter/preowned',(req,res)=>{
+  var asc = req.query.sortBy =='asc';
+  var desc = req.query.sortBy == 'desc';
+  var condition = req.query.condition = 'Pre';
+  var regex = new RegExp(condition.toLowerCase(),'i');
+  if (asc) {
+      const mysort = { selling_price: 1 };
+      Book.countDocuments({condition : regex}, (err, count) => {
+          var totalBooks = count;
+          Book.find({condition : regex}).sort(mysort).exec()
+              .then(result => {
+                  res.status(200).json({
+                      success: true,
+                      books: result,
+                      totalBooks: totalBooks,
+                  });
+              })
+              .catch(error => {
+                  res.status(500).json({
+                      error: error
+                  });
+              });
+      });
+    
+  }
+  
+  if (desc) {
+      const mysort = { selling_price: -1 };
+      Book.countDocuments({condition : regex}, (err, count) => {
+          var totalBooks = count;
+          Book.find({condition : regex}).sort(mysort).exec()
+              .then(result => {
+                  res.status(200).json({
+                      success: true,
+                      books: result,
+                      totalBooks: totalBooks,
+                  });
+              })
+              .catch(error => {
+                  res.status(500).json({
+                      error: error
+                  });
+              });
+      });
+  
+  
+  }
+  if(!asc && !desc){
+      res.status(404).json({
+          message : "Check Query"
+      });
+  }
+  });
 
 router.get('/priceDefined/:first/:second',(req, res, next) => {
   
   const first = req.params.first;
   const second = req.params.second;
- 
-  Book.countDocuments({ selling_price: { $gte: (first), $lte: (second) } ,condition : "New" } , (err, count) => {
+  var condition = req.query.condition;
+  var regex = new RegExp(condition.toLowerCase(),'i');
+  Book.countDocuments({ selling_price: { $gte: (first), $lte: (second) } ,condition : regex } , (err, count) => {
       var totalBooks = count;
       const mysort = { selling_price: 1 };
-      Book.find({ selling_price: { $gte: (first), $lte: (second) },condition : "New" }).sort(mysort).exec()
+      Book.find({ selling_price: { $gte: (first), $lte: (second) },condition : regex }).sort(mysort).exec()
           .then(result => {
               res.status(200).json({
                   success: true,
                   books: result,
-                  totalBooks: totalBooks,
+                  totalBooks: totalBooks
               });
           })
           .catch(error => {
