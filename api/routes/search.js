@@ -82,5 +82,40 @@ router.get('/',async (req,res)=>{
 });
 
 
+router.get('/books',async (req,res)=>{
+  if(req.query.condition == '1'){
+    let searchKeyword = req.query.searchKeyword
+    ? {
+      condition: {
+          $regex: req.query.searchKeyword,
+          $options: 'i',
+        },
+      }
+    : {};
+    let products = await Book.find({ ...searchKeyword });
+   return res.status(200).json({
+      success: true,
+      count : products.length +" " + "Results found",
+      books :products
+    });
+  }
+
+
+ 
+
+
+ 
+
+
+ 
+
+  
+  res.json({
+    message : "Check query"
+  });
+    
+});
+
+
 
 module.exports = router;
