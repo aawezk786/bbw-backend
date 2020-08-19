@@ -16,4 +16,6 @@ router.post('/forgetpw',UsersController.forgetpw);
 router.post('/resendOtp/:Phone',UsersController.resendOtp);
 router.post('/loginGoogle/',UsersController.loginGoogle);
 router.post('/loginFacebook/',UsersController.loginFacebook);
+router.put('/block/:UserId',UsersController.blockUser);
+router.put('/unblock/:UserId',UsersController.unblockUser);
 module.exports = router;

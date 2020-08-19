@@ -44,7 +44,7 @@ exports.user_signup = (req, res, next) => {
 
 exports.user_login = (req, res, next) => {
 
-    User.find({ "local.phonenumber": req.body.phonenumber })
+    User.find({ "local.phonenumber": req.body.phonenumber ,isActive : "true"})
         .exec()
         .then(user => {
             console.log(user)
@@ -82,6 +82,7 @@ exports.user_login = (req, res, next) => {
         .catch(err => {
             console.log(err);
             res.status(500).json({
+                message:"User is inActive",
                 error: err
             })
         });
@@ -116,6 +117,71 @@ exports.getall_users = (req, res, next) => {
     });
 
 }
+
+exports.blockUser = (req, res, next) => {
+let userId = req.params.UserId;
+User.find({_id : userId}).exec()
+.then(result =>{
+    console.log(result)
+    if(result){
+        const myquery = {_id :  userId};
+        const newvalue = { $set : {isActive : "false"}};
+        User.updateOne(myquery,newvalue)
+        .then(data =>{
+          return  res.status(200).json({
+                message: "User Has Been Block Successfully"
+                
+            });
+        })
+        .catch(err=>{
+            next(err)
+        });
+    }else{
+        return res.status(404).json({
+            message: "User Not found"
+            
+        });
+    }
+  
+})
+.catch(err=>{
+    next(err)
+});
+
+}
+
+
+exports.unblockUser = (req, res, next) => {
+    let userId = req.params.UserId;
+    User.find({_id : userId}).exec()
+    .then(result =>{
+        console.log(result)
+        if(result){
+            const myquery = {_id :  userId};
+            const newvalue = { $set : {isActive : "true"}};
+            User.updateOne(myquery,newvalue)
+            .then(data =>{
+              return  res.status(200).json({
+                    message: "User Has Been UnBlock Successfully"
+                    
+                });
+            })
+            .catch(err=>{
+                next(err)
+            });
+        }else{
+            return res.status(404).json({
+                message: "User Not found"
+                
+            });
+        }
+      
+    })
+    .catch(err=>{
+        next(err)
+    });
+    
+    }
 
 exports.get_userId = (req, res, next) => {
     async.parallel([

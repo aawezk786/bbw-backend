@@ -44,6 +44,10 @@ const userSchema = mongoose.Schema({
             lowercase : true
         }
     },
+    isActive : {
+        type : Boolean,
+        default : true
+    }
    
    
 });
