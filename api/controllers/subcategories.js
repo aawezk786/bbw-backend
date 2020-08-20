@@ -1,13 +1,14 @@
 const Subcategory = require('../models/subcategory');
 const mongoose = require('mongoose');
-
+const xlsx = require('xlsx');
+const async = require('async');
 
 
 
 exports.create_subcats = (req, res, next) => {
     const category = new Subcategory({
         _id : new mongoose.Types.ObjectId(),
-        subcategory : req.body.subcategory
+        name :  req.body.name
     });
         category.save()
         .then(category => {

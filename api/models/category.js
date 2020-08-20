@@ -6,12 +6,12 @@ const categorySchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book'
     },
-    icon_name : {type : String, required:true},
+    icon_name : {type : String},
     category : { type: String, required: true },
-    subcategory : { 
+    subcategory : [{ 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Subcategory'
-    }
+    }]
 
 });
 
