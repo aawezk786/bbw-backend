@@ -496,24 +496,30 @@ exports.forgetpw = (req, res, next) => {
 
 
 exports.loginGoogle = (req, res, next) => {
+   let message = "User is Blocked";
     User.find({ 'google.googleId': req.query.googleId })
         .then(result => {
 
             if (result.length > 0) {
-                const token1 = jwt.sign({
-                    googleId: result[0].google.googleId,
-                    name: result[0].google.name,
-                    email: result[0].google.google_email,
-                    userId: result[0]._id
-                },
-                    process.env.JWT_KEY,
-                    {
-                        expiresIn: "8d"
+                if(result[0].isActive ==  true){
+                    const token1 = jwt.sign({
+                        googleId: result[0].google.googleId,
+                        name: result[0].google.name,
+                        email: result[0].google.google_email,
+                        userId: result[0]._id
+                    },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "8d"
+                        });
+    
+                    res.json({
+                        message: "User Already Exist",
+                        token: token1
                     });
-
+                }
                 res.json({
-                    message: "User Already Exist",
-                    token: token1
+                    message: message
                 });
 
             } else {
@@ -547,17 +553,12 @@ exports.loginGoogle = (req, res, next) => {
 
                     })
                     .catch(err => {
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
+                        next(err)
                     });
 
             }
         }).catch(err => {
-            res.status(401).json({
-                error: err
-            });
+            next(err)
         });
 
 
@@ -571,21 +572,28 @@ exports.loginFacebook = (req, res, next) => {
         .then(result => {
 
             if (result.length > 0) {
-                const token1 = jwt.sign({
-                    facebookId: result[0].facebook.facebookId,
-                    name: result[0].facebook.name,
-                    email: result[0].facebook.facebook_email,
-                    userId: result[0]._id
-                },
-                    process.env.JWT_KEY,
-                    {
-                        expiresIn: "8d"
+                if(result[0].isActive ==  true){
+                    const token1 = jwt.sign({
+                        facebookId: result[0].facebook.facebookId,
+                        name: result[0].facebook.name,
+                        email: result[0].facebook.facebook_email,
+                        userId: result[0]._id
+                    },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "30d"
+                        });
+    
+                    res.json({
+                        message: "User Already Exist",
+                        token: token1
                     });
+                }
 
                 res.json({
-                    message: "User Already Exist",
-                    token: token1
+                    message: "User is blocked"
                 });
+              
 
             } else {
                 const user = new User({
@@ -608,27 +616,22 @@ exports.loginFacebook = (req, res, next) => {
                         },
                             process.env.JWT_KEY,
                             {
-                                expiresIn: "8d"
+                                expiresIn: "30d"
                             });
 
                         res.status(200).json({
-                            message: "Success",
+                            message: "Register success",
                             token: token
                         });
 
                     })
                     .catch(err => {
-                        console.log(err);
-                        res.status(500).json({
-                            error: err
-                        });
+                       next(err)
                     });
 
             }
         }).catch(err => {
-            res.status(401).json({
-                error: err
-            });
+           next(err)
         });
 
 
