@@ -22,8 +22,8 @@ var crypto = require('crypto');
 var Razorpay = require('razorpay');
 
 let instance = new Razorpay({
-    key_id: 'rzp_test_wsDPvMUuPkTgca', 
-    key_secret: 'Y4xVb0hA2BcQUDldBa15b8Tl' 
+    key_id: 'rzp_test_t9SNkyK0AYA0iV', 
+    key_secret: '2dNBmblDu5Pg4fc1zuDxiOwf' 
   })
 
 

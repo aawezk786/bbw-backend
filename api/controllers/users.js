@@ -518,9 +518,9 @@ exports.loginGoogle = (req, res, next) => {
                         token: token1
                     });
                 }
-                res.json({
-                    message: message
-                });
+                res.json(
+                     message
+                );
 
             } else {
                 const user = new User({
@@ -590,9 +590,9 @@ exports.loginFacebook = (req, res, next) => {
                     });
                 }
 
-                res.json({
-                    message: "User is blocked"
-                });
+                res.json(
+                     "User is blocked"
+                );
               
 
             } else {
