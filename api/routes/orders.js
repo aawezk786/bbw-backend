@@ -66,12 +66,12 @@ router.post('/create', checkAuth, (req, res, next) => {
      
 
 
-        CartItem.deleteOne({"user": req.userData.userId})
-        .exec()
-        .then(doc => {doc})
-        .catch(error => {
-         next(error)
-        })
+        // CartItem.deleteOne({"user": req.userData.userId})
+        // .exec()
+        // .then(doc => {doc})
+        // .catch(error => {
+        //  next(error)
+        // })
 
 
         
@@ -104,18 +104,17 @@ router.post('/verify',(req,res)=>{
     // };
     // var rzp1 = new Razorpay(options);
     
-    body='order_FP3MqLlhgPNsos' + "|" + req.body.razorpay_payment_id;
-var expectedSignature = crypto.createHmac('sha256', 'Y4xVb0hA2BcQUDldBa15b8Tl')
-                                .update(body.toString())
-                                .digest('hex');
-                                console.log("sig"+"6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5e870ee3c60");
-                                console.log("sig"+expectedSignature);
-var response = {"status":"failure"}
-if(expectedSignature === '6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5e870ee3c60')
- response={"status":"success"}
-   return res.send(response);
-    
-})
+    body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+    var expectedSignature = crypto.createHmac('sha256', 'Y4xVb0hA2BcQUDldBa15b8Tl')
+        .update(body.toString())
+        .digest('hex');
+    console.log("sig" + req.body.razorpay_signature);
+    console.log("sig" + expectedSignature);
+    var response = { "status": "failure" }
+    if (expectedSignature === req.body.razorpay_signature)
+        response = { "status": "success" }
+    res.send(response);
+});
 
 router.get('/getorders',checkAuth, (req, res, next) => {
     const val = false;
