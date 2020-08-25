@@ -90,20 +90,20 @@ router.post('/verify', checkAuth,(req,res)=>{
     const payment = new Payment({
         _id : new mongoose.Types.ObjectId(),
         user : req.userData.userId,
-        razorpay_order_id : req.body.razorpay_order_id,
-        razorpay_payment_id : req.body.razorpay_payment_id,
-        razorpay_signature : req.body.razorpay_signature
+        razorpay_order_id : req.query.razorpay_order_id,
+        razorpay_payment_id : req.query.razorpay_payment_id,
+        razorpay_signature : req.query.razorpay_signature
     });
         payment.save()
         .then(payment => {
-            body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+            body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
             var expectedSignature = crypto.createHmac('sha256', 'ooHzXexh9cIX2wXnZbVt3wg1')
                 .update(body.toString())
                 .digest('hex');
-            console.log("sig" + req.body.razorpay_signature);
+            console.log("sig" + req.query.razorpay_signature);
             console.log("sig" + expectedSignature);
             var response = { "status": "failure" }
-            if (expectedSignature === req.body.razorpay_signature)
+            if (expectedSignature === req.query.razorpay_signature)
                 response = { "status": "success" }
             res.send(response);
         })
