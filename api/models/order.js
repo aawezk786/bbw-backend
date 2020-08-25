@@ -9,7 +9,7 @@ const orderSchema = mongoose.Schema({
             amount: { type: Number},
             receipt : String,
             currency : {type:String,default : "INR"},
-            payment_capture :{type :Number,default : 1},
+            payment_capture :{type :Number,default : 0},
             totalitems: Number,
             totalweight: Number,
             address: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' }
