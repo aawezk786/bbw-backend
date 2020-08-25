@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Order = require('../models/order');
+const Payment = require('../models/payment');
 const CartItem = require('../models/cartItem');
 const UserAddress = require('../models/userAddress');
 const checkAuth = require('../middleware/check-auth');
@@ -85,18 +86,31 @@ router.post('/create', checkAuth, (req, res, next) => {
    
 })
 
-router.post('/verify',(req,res)=>{
-   
-    body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
-    var expectedSignature = crypto.createHmac('sha256', 'ooHzXexh9cIX2wXnZbVt3wg1')
-        .update(body.toString())
-        .digest('hex');
-    console.log("sig" + req.body.razorpay_signature);
-    console.log("sig" + expectedSignature);
-    var response = { "status": "failure" }
-    if (expectedSignature === req.body.razorpay_signature)
-        response = { "status": "success" }
-    res.send(response);
+router.post('/verify', checkAuth,(req,res)=>{
+    const payment = new Payment({
+        _id : new mongoose.Types.ObjectId(),
+        user : req.userData.userId,
+        razorpay_order_id : req.body.razorpay_order_id,
+        razorpay_payment_id : req.body.razorpay_payment_id,
+        razorpay_signature : req.body.razorpay_signature
+    });
+        payment.save()
+        .then(payment => {
+            body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+            var expectedSignature = crypto.createHmac('sha256', 'ooHzXexh9cIX2wXnZbVt3wg1')
+                .update(body.toString())
+                .digest('hex');
+            console.log("sig" + req.body.razorpay_signature);
+            console.log("sig" + expectedSignature);
+            var response = { "status": "failure" }
+            if (expectedSignature === req.body.razorpay_signature)
+                response = { "status": "success" }
+            res.send(response);
+        })
+        .catch(error => {
+            next(error);
+        });
+    
 });
 
 router.get('/getorders',checkAuth, (req, res, next) => {
