@@ -22,8 +22,10 @@ var crypto = require('crypto');
 var Razorpay = require('razorpay');
 
 let instance = new Razorpay({
-    key_id: 'rzp_test_t9SNkyK0AYA0iV', 
-    key_secret: '2dNBmblDu5Pg4fc1zuDxiOwf' 
+    key_id: 'rzp_live_Ztkdvk7oPSuPCy', 
+    key_secret: 'ooHzXexh9cIX2wXnZbVt3wg1' 
+    // key_id: 'rzp_test_t9SNkyK0AYA0iV', 
+    // key_secret: '2dNBmblDu5Pg4fc1zuDxiOwf' 
   })
 
 
@@ -84,28 +86,9 @@ router.post('/create', checkAuth, (req, res, next) => {
 })
 
 router.post('/verify',(req,res)=>{
-    // var options = {
-    //     "key_id": "rzp_test_wsDPvMUuPkTgca",  //Enter your razorpay key
-    //     "key_secret" : "Y4xVb0hA2BcQUDldBa15b8Tl",
-    //     "currency": "INR",
-    //     "name": "Razor Tutorial",
-    //     "description": "Razor Test Transaction",
-    //     "image": "https://previews.123rf.com/images/subhanbaghirov/subhanbaghirov1605/subhanbaghirov160500087/56875269-vector-light-bulb-icon-with-concept-of-idea-brainstorming-idea-illustration-.jpg",
-    //     "order_id": 'order_FP3MqLlhgPNsos',
-    //     "handler": {
-    //        "razorpay_order_id" : "order_FP3MqLlhgPNsos",
-    //         "razorpay_signature": "6a0ee7d5284fcefa81d46a125693fa6710e4cd204b2c0f57f14bc5e870ee3c60"
-    //     }
-    
-    //     ,
-    //     "theme": {
-    //         "color": "#227254"
-    //     }
-    // };
-    // var rzp1 = new Razorpay(options);
-    
+   
     body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
-    var expectedSignature = crypto.createHmac('sha256', 'Y4xVb0hA2BcQUDldBa15b8Tl')
+    var expectedSignature = crypto.createHmac('sha256', 'ooHzXexh9cIX2wXnZbVt3wg1')
         .update(body.toString())
         .digest('hex');
     console.log("sig" + req.body.razorpay_signature);
