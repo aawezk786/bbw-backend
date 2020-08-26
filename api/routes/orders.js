@@ -53,7 +53,7 @@ router.post('/create', checkAuth, (req, res, next) => {
         
         
             var params = {
-                amount: amount ,  
+                amount: amount * 100,  
                 currency: "INR",
                 receipt: req.userData.userId,
                 payment_capture: '1'
