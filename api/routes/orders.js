@@ -114,6 +114,13 @@ router.post('/verify' ,(req,res)=>{
         .catch(error => {
             next(error);
         });
+
+         CartItem.deleteOne({"user": req.query.userId})
+        .exec()
+        .then(doc => {doc})
+        .catch(error => {
+         next(error)
+        })
     
 });
 
