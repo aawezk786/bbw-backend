@@ -90,10 +90,10 @@ router.post('/create', checkAuth, (req, res, next) => {
    
 })
 
-router.post('/verify', checkAuth,(req,res)=>{
+router.post('/verify' ,(req,res)=>{
     const payment = new Payment({
         _id : new mongoose.Types.ObjectId(),
-        user : req.userData.userId,
+        user : req.query.userId,
         razorpay_order_id : req.query.razorpay_order_id,
         razorpay_payment_id : req.query.razorpay_payment_id,
         razorpay_signature : req.query.razorpay_signature
