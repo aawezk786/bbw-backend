@@ -17,16 +17,20 @@ const options = {
         email: 'aawezk786@gmail.com',
         password: 'aawez123'
     }
+    // {
+    //     email: 'zewaa99@gmail.com',
+    //     password: 'Aawez@123123'
+    // }
 };
 
 var crypto = require('crypto');
 var Razorpay = require('razorpay');
 
 let instance = new Razorpay({
-    key_id: 'rzp_live_Ztkdvk7oPSuPCy', 
-    key_secret: 'ooHzXexh9cIX2wXnZbVt3wg1' 
-    // key_id: 'rzp_test_t9SNkyK0AYA0iV', 
-    // key_secret: '2dNBmblDu5Pg4fc1zuDxiOwf' 
+    // key_id: 'rzp_live_Ztkdvk7oPSuPCy', 
+    // key_secret: 'ooHzXexh9cIX2wXnZbVt3wg1' 
+    key_id: 'rzp_test_ImeRpaCPi1JD7v', 
+    key_secret: 'TpJ7W7kEA7NuwqtPwno8NQhl' 
   })
 
 
@@ -97,7 +101,7 @@ router.post('/verify', checkAuth,(req,res)=>{
         payment.save()
         .then(payment => {
             body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
-            var expectedSignature = crypto.createHmac('sha256', 'ooHzXexh9cIX2wXnZbVt3wg1')
+            var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
                 .update(body.toString())
                 .digest('hex');
             console.log("sig" + req.query.razorpay_signature);
