@@ -57,14 +57,20 @@ router.post('/verify', checkAuth, (req,res)=>{
         _id : new mongoose.Types.ObjectId(),
         user : req.userData.userId,
         order: [{
-            orderid : req.query.razorpay_order_id,
+            orderid: req.query.razorpay_order_id,
             paymentid: req.query.razorpay_payment_id,
-            signature : req.query.razorpay_signature,
-            book : req.body.book,
-            amount : req.body.amount,
-            totalitems : req.body.totalitems,
-            totalweight : req.body.totalweight,
-            address : req.query.address
+            signature: req.query.razorpay_signature,
+            book: req.body.book,
+            amount: req.body.amount,
+            totalitems: req.body.totalitems,
+            totalweight: req.body.totalweight,
+            address: {
+                fullname: req.body.fullname,
+                address: req.body.address,
+                city: req.body.city,
+                pincode: req.body.pincode,
+                state: req.body.state
+            }
         }],
         isPaymentCompleted: "true"
     })
