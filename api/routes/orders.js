@@ -37,27 +37,8 @@ let instance = new Razorpay({
 
 
 router.post('/create', checkAuth, (req, res, next) => {
-    let order = new Order({
-        _id: new mongoose.Types.ObjectId(),
-        user: req.userData.userId,
-        order: [{
-           book : req.body.book,
-           amount : req.body.amount,
-           totalitems: req.body.totalitems,
-           totalweight: req.body.totalweight,
-           address: req.query.address
-        }],
-        
-    });
-   
-    let amount = req.body.amount;
-    console.log(amount)
-    order.save()
-    .then( order => {
-        
-        
             var params = {
-                amount: amount * 100,  
+                amount: req.query.amount * 100,  
                 currency: "INR",
                 receipt: req.userData.userId,
                 payment_capture: '1'
@@ -69,41 +50,24 @@ router.post('/create', checkAuth, (req, res, next) => {
                 console.log(error)
                 res.send({"sub":error,"status": "failed"})
             });
-       
-     
-
-
-        // CartItem.deleteOne({"user": req.userData.userId})
-        // .exec()
-        // .then(doc => {doc})
-        // .catch(error => {
-        //  next(error)
-        // })
-
-
-        
-    })
-    .catch(error => {
-       next(error)
-    })
-
-   
 })
 
 router.post('/verify' ,(req,res)=>{
-    const payment = new Payment({
+    let order = new Order({
         _id : new mongoose.Types.ObjectId(),
-        user : req.query.userId,
-        razorpay_order_id : req.query.razorpay_order_id,
-        razorpay_payment_id : req.query.razorpay_payment_id,
-        razorpay_signature : req.query.razorpay_signature
-    });
-        payment.save()
-        .then(payment => {
-            const myquery = {user :  req.query.userId};
-        const newvalue = { $set : {isPaymentCompleted : "true"}};
-        Order.updateOne(myquery,newvalue)
-        .then(data =>{
+        user : req.userData.userId,
+        order: [{
+            orderid : req.query.razorpay_order_id,
+            paymentid: req.query.razorpay_payment_id,
+            signature : req.query.razorpay_signature,
+            book : req.body.book,
+            amount : req.body.amount,
+            totalitems : req.body.totalitems,
+            totalweight : req.body.totalweight,
+            address : req.query.address
+        }],
+        isPaymentCompleted: "true"
+    })
             body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
             var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
                 .update(body.toString())
@@ -111,25 +75,63 @@ router.post('/verify' ,(req,res)=>{
             console.log("sig" + req.query.razorpay_signature);
             console.log("sig" + expectedSignature);
             var response = { "status": "failure" }
-            if (expectedSignature === req.query.razorpay_signature)
-                response = { "status": "success" }
-            res.send(response);
-        })
-        .catch(error => {
-            next(error);
-        });
-        })
-        .catch(err=>{
-            next(err)
-        });
+            if (expectedSignature === req.query.razorpay_signature){
+               order.save()
+               .then(data=>{
+                   res.json({
+                       message : "Order Has been Created Successfully"
+                   })
+               })
+               .catch();
+            }else{
+                res.send(response);
+            }
+                
             
 
-         CartItem.deleteOne({"user": req.query.userId})
-        .exec()
-        .then(doc => {doc})
-        .catch(error => {
-         next(error)
-        })
+
+
+
+
+    // const payment = new Payment({
+    //     _id : new mongoose.Types.ObjectId(),
+    //     user : req.query.userId,
+    //     razorpay_order_id : req.query.razorpay_order_id,
+    //     razorpay_payment_id : req.query.razorpay_payment_id,
+    //     razorpay_signature : req.query.razorpay_signature
+    // });
+    //     payment.save()
+    //     .then(payment => {
+    //         const myquery = {user :  req.query.userId,"order._id" : "5f48ca6177e85c0018c6f5d7"};
+    //     const newvalue = { $set : {isPaymentCompleted : "true"}};
+    //     Order.updateOne(myquery,newvalue)
+    //     .then(data =>{
+    //         body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
+    //         var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
+    //             .update(body.toString())
+    //             .digest('hex');
+    //         console.log("sig" + req.query.razorpay_signature);
+    //         console.log("sig" + expectedSignature);
+    //         var response = { "status": "failure" }
+    //         if (expectedSignature === req.query.razorpay_signature)
+    //             response = { "status": "success" }
+    //         res.send(response);
+    //     })
+    //     .catch(error => {
+    //         next(error);
+    //     });
+    //     })
+    //     .catch(err=>{
+    //         next(err)
+    //     });
+            
+
+        //  CartItem.deleteOne({"user": req.query.userId})
+        // .exec()
+        // .then(doc => {doc})
+        // .catch(error => {
+        //  next(error)
+        // })
     
 });
 

@@ -5,6 +5,9 @@ const orderSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     order: [
         {
+            orderid : {type : String},
+            paymentid:{type : String},
+            signature: {type : String},
             book: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
             amount: { type: Number},
             receipt : String,
@@ -12,7 +15,7 @@ const orderSchema = mongoose.Schema({
             payment_capture :{type :Number,default : 1},
             totalitems: Number,
             totalweight: Number,
-            address: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' }
+            address: { type: mongoose.Schema.Types.ObjectId, ref: 'UserAddress' },
         }
         
     ],
