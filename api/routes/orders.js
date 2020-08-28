@@ -101,7 +101,7 @@ router.post('/verify' ,(req,res)=>{
         payment.save()
         .then(payment => {
             const myquery = {user :  req.query.userId};
-        const newvalue = { $set : {isPaymentCompleted : "false"}};
+        const newvalue = { $set : {isPaymentCompleted : "true"}};
         Order.updateOne(myquery,newvalue)
         .then(data =>{
             body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
