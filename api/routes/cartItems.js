@@ -97,7 +97,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
 
 });
 
-router.get('/User', checkAuth, (req, res, next) => {
+router.get('/User', checkAuth , (req, res, next) => {
 
     const userId = req.userData.userId;
     console.log(userId);

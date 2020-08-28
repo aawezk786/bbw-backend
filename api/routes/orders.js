@@ -36,11 +36,11 @@ let instance = new Razorpay({
 
 
 
-router.post('/create', checkAuth, (req, res, next) => {
+router.post('/create', (req, res, next) => {
             var params = {
                 amount: req.query.amount * 100,  
                 currency: "INR",
-                receipt: req.userData.userId,
+                receipt: req.query.userId,
                 payment_capture: '1'
               };
               instance.orders.create(params).then(data=>{
@@ -52,7 +52,7 @@ router.post('/create', checkAuth, (req, res, next) => {
             });
 })
 
-router.post('/verify' ,(req,res)=>{
+router.post('/verify', checkAuth, (req,res)=>{
     let order = new Order({
         _id : new mongoose.Types.ObjectId(),
         user : req.userData.userId,
