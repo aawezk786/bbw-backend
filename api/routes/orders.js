@@ -94,7 +94,12 @@ router.post('/verify', checkAuth, (req,res)=>{
                 res.send(response);
             }
                 
-            
+         CartItem.deleteOne({"user": req.userData.userId})
+        .exec()
+        .then(doc => {doc})
+        .catch(error => {
+         next(error)
+        })
 
 
 
@@ -133,12 +138,7 @@ router.post('/verify', checkAuth, (req,res)=>{
     //     });
             
 
-        //  CartItem.deleteOne({"user": req.query.userId})
-        // .exec()
-        // .then(doc => {doc})
-        // .catch(error => {
-        //  next(error)
-        // })
+       
     
 });
 
