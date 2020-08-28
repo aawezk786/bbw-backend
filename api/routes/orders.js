@@ -66,6 +66,7 @@ router.post('/verify', checkAuth, (req,res)=>{
             totalweight: req.body.totalweight,
             address: {
                 fullname: req.body.fullname,
+                mobilenumber : req.body.mobilenumber,
                 address: req.body.address,
                 city: req.body.city,
                 pincode: req.body.pincode,

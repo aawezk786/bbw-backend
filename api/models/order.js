@@ -18,6 +18,7 @@ const orderSchema = mongoose.Schema({
             address: {
                 fullname : {type :String},
                 address : {type : String},
+                mobilenumber : {type : String},
                 city : {type : String},
                 pincode : {type : String},
                 state : {type : String}
