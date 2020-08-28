@@ -100,6 +100,10 @@ router.post('/verify' ,(req,res)=>{
     });
         payment.save()
         .then(payment => {
+            const myquery = {user :  req.query.userId};
+        const newvalue = { $set : {isPaymentCompleted : "false"}};
+        Order.updateOne(myquery,newvalue)
+        .then(data =>{
             body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
             var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
                 .update(body.toString())
@@ -114,6 +118,11 @@ router.post('/verify' ,(req,res)=>{
         .catch(error => {
             next(error);
         });
+        })
+        .catch(err=>{
+            next(err)
+        });
+            
 
          CartItem.deleteOne({"user": req.query.userId})
         .exec()
