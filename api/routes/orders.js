@@ -86,8 +86,17 @@ router.post('/verify', checkAuth, (req,res)=>{
             if (expectedSignature === req.query.razorpay_signature){
                order.save()
                .then(data=>{
+                request.post(options, (err, res, body) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    console.log(`Status: ${res.statusCode}`);
+                    shiprocketToken = body.token;
+                    console.log(shiprocketToken);
+                });
                    res.status(200).json({
                        message : "Order Has been Placed",
+                       order : data,
                        token : shiprocketToken
                    })
                 // const optionShip ={
@@ -303,16 +312,16 @@ router.get('/getallorders',checkAuth, (req, res, next) => {
 
 
 
-cron.schedule('* * * * *', () => {
-    request.post(options, (err, res, body) => {
-        if (err) {
-            return console.log(err);
-        }
-        console.log(`Status: ${res.statusCode}`);
-        shiprocketToken = body.token;
-        console.log(shiprocketToken);
-    });
-  });
+// cron.schedule('*/2 * * * *', () => {
+//     request.post(options, (err, res, body) => {
+//         if (err) {
+//             return console.log(err);
+//         }
+//         console.log(`Status: ${res.statusCode}`);
+//         shiprocketToken = body.token;
+//         console.log(shiprocketToken);
+//     });
+//   });
 
 
 module.exports = router;
