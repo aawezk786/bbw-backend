@@ -23,6 +23,7 @@ const options = {
     // }
 };
 
+
 var crypto = require('crypto');
 var Razorpay = require('razorpay');
 
@@ -85,9 +86,74 @@ router.post('/verify', checkAuth, (req,res)=>{
             if (expectedSignature === req.query.razorpay_signature){
                order.save()
                .then(data=>{
-                   res.json({
-                       message : "Order Has been Created Successfully"
+                   res.status(200).json({
+                       message : "Order Has been Placed",
+                       token : shiprocketToken
                    })
+                // const optionShip ={
+                //     url: 'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
+                //     json: true,
+                //     method: 'POST',
+                //     body :{
+                //     order_id: req.query.razorpay_order_id,
+                //     order_date: Date.now(),
+                //     pickup_location: "pickup",
+                //     channel_id: "",
+                //     comment: "Reseller: M/s Goku",
+                //     billing_customer_name: req.body.fullname,
+                //     billing_last_name: "",
+                //     billing_address: "House 221B, Leaf Village",
+                //     billing_address_2: "Near Hokage House",
+                //     billing_city: "New Delhi",
+                //     billing_pincode: "110002",
+                //     billing_state: "Delhi",
+                //     billing_country: "India",
+                //     billing_email: "aawez@gmail.com",
+                //     billing_phone: "8108481831",
+                //     shipping_is_billing: true,
+                //     shipping_customer_name: "",
+                //     shipping_last_name: "",
+                //     shipping_address: "",
+                //     shipping_address_2: "",
+                //     shipping_city: "",
+                //     shipping_pincode: "",
+                //     shipping_country: "",
+                //     shipping_state: "",
+                //     shipping_email: "",
+                //     shipping_phone: "",
+                //     order_items: [
+                //       {
+                //         name: "Kunai",
+                //         sku: "chakra123",
+                //         units: 1,
+                //         selling_price: "90",
+                //         discount: "",
+                //         tax: "",
+                //         hsn: 441122
+                //       }
+                //     ],
+                //     payment_method: "Prepaid",
+                //     shipping_charges: 0,
+                //     giftwrap_charges: 0,
+                //     transaction_charges: 0,
+                //     total_discount: 0,
+                //     sub_total: 90,
+                //     length: 10,
+                //     breadth: 15,
+                //     height: 20,
+                //     weight: 2.5
+                //     }
+                    
+                // }
+                // request.post(options, (err, res, body) => {
+                //     if (err) {
+                //         return console.log(err);
+                //     }
+                    
+                    
+                // });
+                   
+                  
                })
                .catch();
             }else{
@@ -145,105 +211,108 @@ router.post('/verify', checkAuth, (req,res)=>{
 router.get('/getorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
-    Order.find({"user": userId,"isOrderCompleted" : val})
-    .select('order  isOrderCompleted orderDate')
-    .populate('order.book', 'book_name selling_price weight')
-    .populate('user' , ' _id')
+    Order.find({"user": userId})
+    .select('order  isOrderCompleted orderDate isPaymentCompleted')
+    .populate('order.book', 'book_name selling_price weight sku')
+    .populate('user')
     .exec()
     .then(orders => {
-        console.log(orders)
-        UserAddress.find({"user": userId})
-        .exec()
-        .then(userAddress => {
-            console.log(userAddress)
-            let orderWithAddress = orders.map(order => {
-                console.log(order)
-                let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
-                return {
-                    _id: order._id,
-                    order: order.order,
-                    address: address,
-                    orderDate: order.orderDate,
-                    isOrderComleted: order.isOrderCompleted
-                }
-            });
-
-            res.status(200).json({
-                orderDetails : orderWithAddress
-            });
-
-        })
-        .catch(error => {
-            return res.status(500).json({
-                error: error
-            })
-        })
-        
+                let orderWithAddress = orders.map(order => {
+                    return {
+                        _id: order._id,
+                        user :   order.user._id,
+                        order_items: order.order[0].book,
+                        orderid : order.order[0].orderid,
+                        paymentid : order.order[0].paymentid,
+                        amount : order.order[0].amount,
+                        address: order.order[0].address,
+                        orderDate: order.orderDate,
+                        isOrderComleted: order.isOrderCompleted,
+                        isPaymentCompleted: order.isPaymentCompleted
+                    }
+                })
+                res.status(200).json(
+                    orderWithAddress
+                );
+        // UserAddress.find({"user": userId})
+        // .exec()
+        // .then(userAddress => {
+        //     console.log(userAddress)
+        //     let orderWithAddress = orders.map(order => {
+        //         console.log(order)
+        //         let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
+        //         return {
+        //             _id: order._id,
+        //             order: order.order,
+        //             address: address,
+        //             orderDate: order.orderDate,
+        //             isOrderComleted: order.isOrderCompleted
+        //         }
+        //     });
+        //     res.status(200).json({
+        //         orderDetails : orderWithAddress
+        //     });
+        // })
+        // .catch(error => {
+        //     return res.status(500).json({
+        //         error: error
+        //     })
+        // })
     })
     .catch(error => {
         res.status(500).json({
             error: error
         });
     });
-
 });
 
 router.get('/getallorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
-    Order.find({"isOrderCompleted" : val})
-    .select('order  isOrderCompleted orderDate')
+    Order.find()
+    .select('order  isOrderCompleted isPaymentCompleted orderDate')
     .populate('order.book', 'book_name selling_price weight')
-    .populate('user' , 'local.name local.local_email local.phonenumber _id')
+    .populate('user')
     .exec()
     .then(orders => {
-        UserAddress.findOne({})
-        .exec()
-        .then(userAddress => {
-            let orderWithAddress = orders.map(order => {
-                
-                let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
-                return {
-                    _id: order._id,
-                    order: order.order,
-                    address: address,
-                    orderDate: order.orderDate,
-                    isOrderComleted: order.isOrderCompleted
-                }
-            });
-
-            res.status(200).json({
-                orderDetails : orderWithAddress
-            });
-
+        let orderWithAddress = orders.map(order => {
+            return {
+                _id: order._id,
+                user :   order.user._id,
+                order_items: order.order[0].book,
+                orderid : order.order[0].orderid,
+                paymentid : order.order[0].paymentid,
+                amount : order.order[0].amount,
+                address: order.order[0].address,
+                orderDate: order.orderDate,
+                isOrderComleted: order.isOrderCompleted,
+                isPaymentCompleted: order.isPaymentCompleted
+            }
         })
-        .catch(error => {
-            return res.status(500).json({
-                error: error
-            })
-        })
-        
+        res.status(200).json(
+            orderWithAddress
+        );
     })
     .catch(error => {
         res.status(500).json({
             error: error
         });
     });
-
 });
 
 
-// cron.schedule('* * * * *', () => {
-//     request.post(options, (err, res, body) => {
-//         if (err) {
-//             return console.log(err);
-//         }
-//         console.log(`Status: ${res.statusCode}`);
-//         console.log(body.token);
-//         shiprocketToken = body.token;
-//         console.log(shiprocketToken)
-//     });
-//   });
+
+
+cron.schedule('* * * * *', () => {
+    request.post(options, (err, res, body) => {
+        if (err) {
+            return console.log(err);
+        }
+        console.log(`Status: ${res.statusCode}`);
+        shiprocketToken = body.token;
+        console.log(shiprocketToken);
+    });
+  });
 
 
 module.exports = router;
