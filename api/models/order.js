@@ -5,10 +5,13 @@ const orderSchema = mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     order: [
         {
-            orderid : {type : String},
-            paymentid:{type : String},
-            signature: {type : String},
-            book: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+            orderid: { type: String },
+            paymentid: { type: String },
+            signature: { type: String },
+            book: [{
+                id: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+                units: { type: Number }
+            }],
             amount: { type: Number},
             receipt : String,
             currency : {type:String,default : "INR"},
