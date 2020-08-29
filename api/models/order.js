@@ -9,7 +9,7 @@ const orderSchema = mongoose.Schema({
             paymentid: { type: String },
             signature: { type: String },
             book: [{
-                id: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+                bookdetail: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
                 units: { type: Number }
             }],
             amount: { type: Number},
