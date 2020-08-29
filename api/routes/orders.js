@@ -272,7 +272,7 @@ router.get('/getorders',checkAuth, (req, res, next) => {
 router.get('/getorderbyid/:orderid', (req, res, next) => {
     Order.find({"order.orderid": req.params.orderid})
     .select('order  isOrderCompleted orderDate isPaymentCompleted')
-    .populate('order.book', 'book_name selling_price weight sku')
+    .populate('order.book.bookdetail', 'book_name selling_price weight sku')
     .populate('user')
     .exec()
     .then(orders => {
