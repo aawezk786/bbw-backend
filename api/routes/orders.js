@@ -96,7 +96,7 @@ router.post('/verify', checkAuth, (req,res)=>{
                 });
                    res.status(200).json({
                        message : "Order Has been Placed",
-                       order : data,
+                       order : data.populate('book'),
                        token : shiprocketToken
                    })
                 // const optionShip ={
