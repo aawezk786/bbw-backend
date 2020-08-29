@@ -215,7 +215,7 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     const userId = req.userData.userId;
     Order.find({"user": userId})
     .select('order  isOrderCompleted orderDate isPaymentCompleted')
-    .populate('order.book', 'book_name selling_price weight sku')
+    .populate('order.book.id', 'book_name selling_price weight sku')
     .populate('user')
     .exec()
     .then(orders => {
