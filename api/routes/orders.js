@@ -275,6 +275,38 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     });
 });
 
+router.get('/getorderbyid/:orderid', (req, res, next) => {
+    Order.find({"order.orderid": req.params.orderid})
+    .select('order  isOrderCompleted orderDate isPaymentCompleted')
+    .populate('order.book', 'book_name selling_price weight sku')
+    .populate('user')
+    .exec()
+    .then(orders => {
+                let orderWithAddress = orders.map(order => {
+                    return {
+                        _id: order._id,
+                        user :   order.user._id,
+                        order_items: order.order[0].book,
+                        orderid : order.order[0].orderid,
+                        paymentid : order.order[0].paymentid,
+                        amount : order.order[0].amount,
+                        address: order.order[0].address,
+                        orderDate: order.orderDate,
+                        isOrderComleted: order.isOrderCompleted,
+                        isPaymentCompleted: order.isPaymentCompleted
+                    }
+                })
+                res.status(200).json(
+                    orderWithAddress
+                );
+    })
+    .catch(error => {
+        res.status(500).json({
+            error: error
+        });
+    });
+});
+
 router.get('/getallorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
