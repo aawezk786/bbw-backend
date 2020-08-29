@@ -168,13 +168,7 @@ router.post('/verify', checkAuth, (req,res)=>{
                 res.send(response);
             }
                 
-         CartItem.deleteOne({"user": req.userData.userId})
-        .exec()
-        .then(doc => {doc})
-        .catch(error => {
-         next(error)
-        })
-
+        
 
 
 
@@ -225,6 +219,7 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     .populate('user')
     .exec()
     .then(orders => {
+       
                 let orderWithAddress = orders.map(order => {
                     return {
                         _id: order._id,
