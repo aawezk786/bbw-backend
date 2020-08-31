@@ -22,23 +22,23 @@ const options = {
     //     password: 'Aawez@123123'
     // }
 };
-
-
 var crypto = require('crypto');
 var Razorpay = require('razorpay');
-
 let instance = new Razorpay({
     // key_id: 'rzp_live_Ztkdvk7oPSuPCy', 
     // key_secret: 'ooHzXexh9cIX2wXnZbVt3wg1' 
     key_id: 'rzp_test_ImeRpaCPi1JD7v', 
     key_secret: 'TpJ7W7kEA7NuwqtPwno8NQhl' 
   })
-
-
-
-
+    request.post(options, (err, res, body) => {
+        if (err) {
+            return console.log(err);
+        }
+        console.log(`Status: ${res.statusCode}`);
+        shiprocketToken = body.token;
+    });
 router.post('/create', (req, res, next) => {
-            var params = {
+    var params = {
                 amount: req.query.amount * 100,  
                 currency: "INR",
                 receipt: req.query.userId,
@@ -46,14 +46,13 @@ router.post('/create', (req, res, next) => {
               };
               instance.orders.create(params).then(data=>{
                 console.log(data)
-               return res.send({'sub':data,"status":"success"});
+               return res.json({'sub':data,"status":"success","token" : shiprocketToken});
             }).catch(error =>{
                 console.log(error)
                 res.send({"sub":error,"status": "failed"})
             });
 })
-
-router.post('/verify', checkAuth, (req,res)=>{
+router.post('/verify', checkAuth, (req,res,next)=>{
     let order = new Order({
         _id : new mongoose.Types.ObjectId(),
         user : req.userData.userId,
@@ -86,17 +85,8 @@ router.post('/verify', checkAuth, (req,res)=>{
             if (expectedSignature === req.query.razorpay_signature){
                order.save()
                .then(data=>{
-                request.post(options, (err, res, body) => {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    console.log(`Status: ${res.statusCode}`);
-                    shiprocketToken = body.token;
-                    console.log(shiprocketToken);
-                });
                    res.status(200).json({
-                       message : "Order Has been Placed",
-                       token : shiprocketToken
+                       message : "Order Has been Placed"
                    })
                 // const optionShip ={
                 //     url: 'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
@@ -151,28 +141,19 @@ router.post('/verify', checkAuth, (req,res)=>{
                 //     height: 20,
                 //     weight: 2.5
                 //     }
-                    
                 // }
                 // request.post(options, (err, res, body) => {
                 //     if (err) {
                 //         return console.log(err);
                 //     }
-                    
-                    
                 // });
-                   
-                  
                })
-               .catch();
+               .catch(err=>{
+                   next(err)
+               });
             }else{
                 res.send(response);
             }
-                
-        
-
-
-
-
     // const payment = new Payment({
     //     _id : new mongoose.Types.ObjectId(),
     //     user : req.query.userId,
@@ -204,12 +185,7 @@ router.post('/verify', checkAuth, (req,res)=>{
     //     .catch(err=>{
     //         next(err)
     //     });
-            
-
-       
-    
 });
-
 router.get('/getorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
@@ -219,7 +195,6 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     .populate('user')
     .exec()
     .then(orders => {
-       
                 let orderWithAddress = orders.map(order => {
                     return {
                         _id: order._id,
@@ -268,7 +243,6 @@ router.get('/getorders',checkAuth, (req, res, next) => {
         });
     });
 });
-
 router.get('/getorderbyid/:orderid', (req, res, next) => {
     Order.find({"order.orderid": req.params.orderid})
     .select('order  isOrderCompleted orderDate isPaymentCompleted')
@@ -300,7 +274,6 @@ router.get('/getorderbyid/:orderid', (req, res, next) => {
         });
     });
 });
-
 router.get('/getallorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
@@ -334,11 +307,7 @@ router.get('/getallorders',checkAuth, (req, res, next) => {
         });
     });
 });
-
-
-
-
-// cron.schedule('*/2 * * * *', () => {
+// cron.schedule('* * * * * *', () => {
 //     request.post(options, (err, res, body) => {
 //         if (err) {
 //             return console.log(err);
@@ -348,6 +317,4 @@ router.get('/getallorders',checkAuth, (req, res, next) => {
 //         console.log(shiprocketToken);
 //     });
 //   });
-
-
 module.exports = router;
