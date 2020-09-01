@@ -30,13 +30,13 @@ let instance = new Razorpay({
     key_id: 'rzp_test_ImeRpaCPi1JD7v', 
     key_secret: 'TpJ7W7kEA7NuwqtPwno8NQhl' 
   })
-    request.post(options, (err, res, body) => {
-        if (err) {
-            return console.log(err);
-        }
-        console.log(`Status: ${res.statusCode}`);
-        shiprocketToken = body.token;
-    });
+  request.post(options, (err, res, body) => {
+    if (err) {
+        return console.log(err);
+    }
+    console.log(`Status: ${res.statusCode}`);
+    shiprocketToken = body.token;
+});
 router.post('/create', (req, res, next) => {
     var params = {
                 amount: req.query.amount * 100,  
@@ -279,7 +279,7 @@ router.get('/getallorders',checkAuth, (req, res, next) => {
     const userId = req.userData.userId;
     Order.find()
     .select('order  isOrderCompleted isPaymentCompleted orderDate')
-    .populate('order.book', 'book_name selling_price weight')
+    .populate('order.book.bookdetail', 'book_name sku selling_price weight')
     .populate('user')
     .exec()
     .then(orders => {
