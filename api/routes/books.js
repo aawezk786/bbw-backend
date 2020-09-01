@@ -51,6 +51,6 @@ router.get('/popular', BooksControllers.popularbook);
 router.get('/', BooksControllers.getAllBooks);
 router.get('/:bookId', BooksControllers.detailBooks);
 router.get('/categories/:catId', BooksControllers.getBooksByCats);
-router.post('/singleBook', uploadsingle.array('book_img', 3), BooksControllers.book_single_post);
+router.post('/singleBook', uploadsingle.array('book_img' ,4), BooksControllers.book_single_post);
 
 module.exports = router;
