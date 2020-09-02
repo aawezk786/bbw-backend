@@ -301,9 +301,8 @@ router.get('/getorderbyid/:orderid', (req, res, next) => {
         });
     });
 });
-router.get('/getallorders',checkAuth, (req, res, next) => {
+router.get('/getallorders', (req, res, next) => {
     const val = false;
-    const userId = req.userData.userId;
     Order.find()
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid')
     .populate('order.book.bookdetail', 'book_name sku selling_price weight')
