@@ -13,14 +13,15 @@ const options = {
     url: 'https://apiv2.shiprocket.in/v1/external/auth/login',
     json: true,
     method: 'POST',
-    body: //{
-    //     email: 'aawezk786@gmail.com',
-    //     password: 'aawez123'
-    // }
+    body: 
     {
-        email: 'zewaa99@gmail.com',
-        password: 'Aawez@123123'
+        email: 'aawezk786@gmail.com',
+        password: 'aawez123'
     }
+    // {
+    //     email: 'zewaa99@gmail.com',
+    //     password: 'Aawez@123123'
+    // }
 };
 var crypto = require('crypto');
 var Razorpay = require('razorpay');
