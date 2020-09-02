@@ -190,7 +190,7 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
     Order.find({"user": userId})
-    .select('order  isOrderCompleted orderDate isPaymentCompleted')
+    .select('order  isOrderCompleted orderDate isPaymentCompleted shippingid shiporderid')
     .populate('order.book.bookdetail', 'book_name selling_price weight sku')
     .populate('user')
     .exec()
@@ -206,7 +206,9 @@ router.get('/getorders',checkAuth, (req, res, next) => {
                         address: order.order[0].address,
                         orderDate: order.orderDate,
                         isOrderComleted: order.isOrderCompleted,
-                        isPaymentCompleted: order.isPaymentCompleted
+                        isPaymentCompleted: order.isPaymentCompleted,
+                        shiporderid : order.shiporderid,
+                        shippingid : order.shippingid
                     }
                 })
                 res.status(200).json(
@@ -243,9 +245,29 @@ router.get('/getorders',checkAuth, (req, res, next) => {
         });
     });
 });
+router.post('/updateorder/:orderid', (req,res,next) => {
+    Order.find({"order.orderid" : req.params.orderid})
+    .then(data =>{
+        const myquery = {"order.orderid" : req.params.orderid};
+        const newvalue = { $set : {"shippingid" : req.query.shippingid,"shiporderid" : req.query.shiporderid}}; 
+        Order.updateOne(myquery,newvalue)
+        .then(data =>{
+            res.json({
+                message : "Order Updated SuccessFull"
+            })
+        })
+        .catch(err=>{
+            next(err)
+        });
+    })
+    .catch(err=>{
+        next(err)
+    });
+});
+
 router.get('/getorderbyid/:orderid', (req, res, next) => {
     Order.find({"order.orderid": req.params.orderid})
-    .select('order  isOrderCompleted orderDate isPaymentCompleted')
+    .select('order  isOrderCompleted orderDate isPaymentCompleted shiporderid shippingid')
     .populate('order.book.bookdetail', 'book_name selling_price weight sku')
     .populate('user')
     .exec()
@@ -261,7 +283,9 @@ router.get('/getorderbyid/:orderid', (req, res, next) => {
                         address: order.order[0].address,
                         orderDate: order.orderDate,
                         isOrderComleted: order.isOrderCompleted,
-                        isPaymentCompleted: order.isPaymentCompleted
+                        isPaymentCompleted: order.isPaymentCompleted,
+                        shiporderid : order.shiporderid,
+                        shippingid : order.shippingid
                     }
                 })
                 res.status(200).json(
@@ -278,7 +302,7 @@ router.get('/getallorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
     Order.find()
-    .select('order  isOrderCompleted isPaymentCompleted orderDate')
+    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid')
     .populate('order.book.bookdetail', 'book_name sku selling_price weight')
     .populate('user')
     .exec()
@@ -294,7 +318,9 @@ router.get('/getallorders',checkAuth, (req, res, next) => {
                 address: order.order[0].address,
                 orderDate: order.orderDate,
                 isOrderComleted: order.isOrderCompleted,
-                isPaymentCompleted: order.isPaymentCompleted
+                isPaymentCompleted: order.isPaymentCompleted,
+                shiporderid : order.shiporderid,
+                shippingid : order.shippingid
             }
         })
         res.status(200).json(

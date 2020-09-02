@@ -26,9 +26,12 @@ const orderSchema = mongoose.Schema({
                 pincode : {type : String},
                 state : {type : String}
             },
+            
         }
         
     ],
+    shippingid: { type: Number },
+    shiporderid: {type : Number},
     isPaymentCompleted : {type: Boolean,default : false},
     orderDate: { type: Date, default: Date.now() },
     isOrderCompleted: { type: Boolean, default: false }
