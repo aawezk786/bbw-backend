@@ -245,13 +245,15 @@ router.get('/getorders',checkAuth, (req, res, next) => {
         });
     });
 });
-router.post('/updateorder/:orderid', (req,res,next) => {
+router.post('/updateorder/:orderid', checkAuth, (req,res,next) => {
     Order.find({"order.orderid" : req.params.orderid})
     .then(data =>{
         const myquery = {"order.orderid" : req.params.orderid};
         const newvalue = { $set : {"shippingid" : req.query.shippingid,"shiporderid" : req.query.shiporderid}}; 
         Order.updateOne(myquery,newvalue)
         .then(data =>{
+            CartItem.deleteOne({user : req.userData.userId})
+            .then(doc => {doc}).catch(err=>{next(err)});
             res.json({
                 message : "Order Updated SuccessFull"
             })
