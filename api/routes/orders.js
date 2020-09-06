@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Order = require('../models/order');
-const Payment = require('../models/payment');
 const CartItem = require('../models/cartItem');
 const UserAddress = require('../models/userAddress');
 const checkAuth = require('../middleware/check-auth');

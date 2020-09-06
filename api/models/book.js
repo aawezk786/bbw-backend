@@ -77,7 +77,7 @@ const bookSchema = mongoose.Schema({
         ref: 'Category'
         
     },
-    subcategory1 : {
+    subcategory : {
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Subcategory'
     },
