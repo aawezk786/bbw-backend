@@ -15,7 +15,7 @@ router.post('/AddCoupon',(req,res,next)=>{
         coupon.save()
         .then(coupon => {
             return res.status(201).json({
-                message: 'Category was created',
+                message: 'Coupon was created',
                 details: coupon
             });
         })
