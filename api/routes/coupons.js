@@ -24,6 +24,38 @@ router.post('/AddCoupon', (req, res, next) => {
         });
 });
 
+router.get('/getAll', (req,res,next)=>{
+    Coupon.find()
+    .exec()
+    .then(docs =>{
+        if(docs.length >=0){
+            res.status(200).json(docs);
+        }else{
+            res.status(404).json({
+                message : "No Coupon Found"
+            });
+        }
+    })
+    .catch(err =>{
+        next(err);
+    });
+});
 
+router.get('/getById/:couponId', (req,res,next)=>{
+    Coupon.find({_id : req.params.couponId})
+    .exec()
+    .then(docs =>{
+        if(docs.length >=0){
+            res.status(200).json(docs);
+        }else{
+            res.status(404).json({
+                message : "Coupon Has Been Expired"
+            });
+        }
+    })
+    .catch(err =>{
+        next(err);
+    });
+});
 
 module.exports = router;
