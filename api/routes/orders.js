@@ -5,6 +5,7 @@ const Order = require('../models/order');
 const CartItem = require('../models/cartItem');
 const UserAddress = require('../models/userAddress');
 const checkAuth = require('../middleware/check-auth');
+const Coupon = require('../models/coupon');
 var cron = require('node-cron');
 const request = require('request');
 let shiprocketToken;
@@ -37,6 +38,7 @@ let instance = new Razorpay({
     console.log(`Status: ${res.statusCode}`);
     shiprocketToken = body.token;
 });
+
 router.post('/create', (req, res, next) => {
     var params = {
                 amount: req.query.amount * 100,  
@@ -52,10 +54,11 @@ router.post('/create', (req, res, next) => {
                 res.send({"sub":error,"status": "failed"})
             });
 })
-router.post('/verify', checkAuth, (req,res,next)=>{
+
+router.post('/verify', checkAuth, (req, res, next) => {
     let order = new Order({
-        _id : new mongoose.Types.ObjectId(),
-        user : req.userData.userId,
+        _id: new mongoose.Types.ObjectId(),
+        user: req.userData.userId,
         order: [{
             orderid: req.query.razorpay_order_id,
             paymentid: req.query.razorpay_payment_id,
@@ -66,126 +69,46 @@ router.post('/verify', checkAuth, (req,res,next)=>{
             totalweight: req.body.totalweight,
             address: {
                 fullname: req.body.fullname,
-                mobilenumber : req.body.mobilenumber,
+                mobilenumber: req.body.mobilenumber,
                 address: req.body.address,
                 city: req.body.city,
                 pincode: req.body.pincode,
                 state: req.body.state
-            }
+            },
+            isCouponApplied: req.body.isCouponApplied,
+            coupon_code: req.body.coupon_code
         }],
         isPaymentCompleted: "true"
     })
-            body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
-            var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
-                .update(body.toString())
-                .digest('hex');
-            console.log("sig" + req.query.razorpay_signature);
-            console.log("sig" + expectedSignature);
-            var response = { "status": "failure" }
-            if (expectedSignature === req.query.razorpay_signature){
-               order.save()
-               .then(data=>{
-                   res.status(200).json({
-                       message : "Order Has been Placed"
-                   })
-                // const optionShip ={
-                //     url: 'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
-                //     json: true,
-                //     method: 'POST',
-                //     body :{
-                //     order_id: req.query.razorpay_order_id,
-                //     order_date: Date.now(),
-                //     pickup_location: "pickup",
-                //     channel_id: "",
-                //     comment: "Reseller: M/s Goku",
-                //     billing_customer_name: req.body.fullname,
-                //     billing_last_name: "",
-                //     billing_address: "House 221B, Leaf Village",
-                //     billing_address_2: "Near Hokage House",
-                //     billing_city: "New Delhi",
-                //     billing_pincode: "110002",
-                //     billing_state: "Delhi",
-                //     billing_country: "India",
-                //     billing_email: "aawez@gmail.com",
-                //     billing_phone: "8108481831",
-                //     shipping_is_billing: true,
-                //     shipping_customer_name: "",
-                //     shipping_last_name: "",
-                //     shipping_address: "",
-                //     shipping_address_2: "",
-                //     shipping_city: "",
-                //     shipping_pincode: "",
-                //     shipping_country: "",
-                //     shipping_state: "",
-                //     shipping_email: "",
-                //     shipping_phone: "",
-                //     order_items: [
-                //       {
-                //         name: "Kunai",
-                //         sku: "chakra123",
-                //         units: 1,
-                //         selling_price: "90",
-                //         discount: "",
-                //         tax: "",
-                //         hsn: 441122
-                //       }
-                //     ],
-                //     payment_method: "Prepaid",
-                //     shipping_charges: 0,
-                //     giftwrap_charges: 0,
-                //     transaction_charges: 0,
-                //     total_discount: 0,
-                //     sub_total: 90,
-                //     length: 10,
-                //     breadth: 15,
-                //     height: 20,
-                //     weight: 2.5
-                //     }
-                // }
-                // request.post(options, (err, res, body) => {
-                //     if (err) {
-                //         return console.log(err);
-                //     }
-                // });
-               })
-               .catch(err=>{
-                   next(err)
-               });
-            }else{
-                res.send(response);
-            }
-    // const payment = new Payment({
-    //     _id : new mongoose.Types.ObjectId(),
-    //     user : req.query.userId,
-    //     razorpay_order_id : req.query.razorpay_order_id,
-    //     razorpay_payment_id : req.query.razorpay_payment_id,
-    //     razorpay_signature : req.query.razorpay_signature
-    // });
-    //     payment.save()
-    //     .then(payment => {
-    //         const myquery = {user :  req.query.userId,"order._id" : "5f48ca6177e85c0018c6f5d7"};
-    //     const newvalue = { $set : {isPaymentCompleted : "true"}};
-    //     Order.updateOne(myquery,newvalue)
-    //     .then(data =>{
-    //         body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
-    //         var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
-    //             .update(body.toString())
-    //             .digest('hex');
-    //         console.log("sig" + req.query.razorpay_signature);
-    //         console.log("sig" + expectedSignature);
-    //         var response = { "status": "failure" }
-    //         if (expectedSignature === req.query.razorpay_signature)
-    //             response = { "status": "success" }
-    //         res.send(response);
-    //     })
-    //     .catch(error => {
-    //         next(error);
-    //     });
-    //     })
-    //     .catch(err=>{
-    //         next(err)
-    //     });
+    body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
+    var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
+        .update(body.toString())
+        .digest('hex');
+    console.log("sig" + req.query.razorpay_signature);
+    console.log("sig" + expectedSignature);
+    var response = { "status": "failure" }
+    if (expectedSignature === req.query.razorpay_signature) {
+        order.save()
+            .then(data => {
+                Coupon.findOneAndUpdate({ _id: req.body.coupon_code }, { $push: { "user": req.userData.userId } }).exec()
+                    .then(result => {
+                        res.status(200).json({
+                            message: "Order Has been Placed"
+                        })
+                    })
+                    .catch(err => {
+                        next(err)
+                    });
+            })
+            .catch(err => {
+                next(err)
+            });
+    } else {
+        res.send(response);
+    }
 });
+
+
 router.get('/getorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
@@ -214,30 +137,6 @@ router.get('/getorders',checkAuth, (req, res, next) => {
                 res.status(200).json(
                     orderWithAddress
                 );
-        // UserAddress.find({"user": userId})
-        // .exec()
-        // .then(userAddress => {
-        //     console.log(userAddress)
-        //     let orderWithAddress = orders.map(order => {
-        //         console.log(order)
-        //         let address = userAddress.address.find(userAdd => order.order[0].address.equals(userAdd._id));
-        //         return {
-        //             _id: order._id,
-        //             order: order.order,
-        //             address: address,
-        //             orderDate: order.orderDate,
-        //             isOrderComleted: order.isOrderCompleted
-        //         }
-        //     });
-        //     res.status(200).json({
-        //         orderDetails : orderWithAddress
-        //     });
-        // })
-        // .catch(error => {
-        //     return res.status(500).json({
-        //         error: error
-        //     })
-        // })
     })
     .catch(error => {
         res.status(500).json({

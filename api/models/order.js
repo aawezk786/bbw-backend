@@ -26,7 +26,8 @@ const orderSchema = mongoose.Schema({
                 pincode : {type : String},
                 state : {type : String}
             },
-            
+            isCouponApplied:{type:Boolean,default:false},
+            coupon_code:{ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' }
         }
         
     ],
