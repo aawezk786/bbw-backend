@@ -94,7 +94,7 @@ router.post('/verify', checkAuth, (req, res, next) => {
                     .then(result => {
                         res.status(200).json({
                             message: "Order Has been Placed"
-                        })
+                        });
                     })
                     .catch(err => {
                         next(err)
