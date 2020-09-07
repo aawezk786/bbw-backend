@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Coupon = require('../models/coupon');
 const mongoose = require('mongoose');
+const checkAuth = require('../middleware/check-auth');
 
 router.post('/AddCoupon', (req, res, next) => {
     const coupon = new Coupon({
@@ -41,6 +42,26 @@ router.get('/getAll', (req,res,next)=>{
     });
 });
 
+router.get('/getAllUser',checkAuth, (req,res,next)=>{
+  let user = req.userData.userId;
+    Coupon.find()
+    .exec()
+    .then(docs =>{
+        Coupon.find({user : { $ne: user }})
+        .then(doc=>{
+            if(doc.length >=0){
+            res.status(200).json(doc);
+        }else{
+            res.status(404).json({
+                message : "No Coupon Found"
+            });
+        }
+        })
+    })
+    .catch(err =>{
+        next(err);
+    });
+});
 router.get('/getById/:couponId', (req,res,next)=>{
     Coupon.find({_id : req.params.couponId})
     .exec()
