@@ -113,30 +113,34 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     const val = false;
     const userId = req.userData.userId;
     Order.find({"user": userId})
-    .select('order  isOrderCompleted orderDate isPaymentCompleted shippingid shiporderid')
-    .populate('order.book.bookdetail', 'book_name selling_price weight sku')
-    .populate('user')
+    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
+    .populate('order.book.bookdetail', 'book_name sku selling_price weight')
+    .populate('user order.coupon_code')
     .exec()
     .then(orders => {
-                let orderWithAddress = orders.map(order => {
-                    return {
-                        _id: order._id,
-                        user :   order.user._id,
-                        order_items: order.order[0].book,
-                        orderid : order.order[0].orderid,
-                        paymentid : order.order[0].paymentid,
-                        amount : order.order[0].amount,
-                        address: order.order[0].address,
-                        orderDate: order.orderDate,
-                        isOrderComleted: order.isOrderCompleted,
-                        isPaymentCompleted: order.isPaymentCompleted,
-                        shiporderid : order.shiporderid,
-                        shippingid : order.shippingid
-                    }
-                })
-                res.status(200).json(
-                    orderWithAddress
-                );
+        
+         let orderWithAddress = orders.map(order => {
+            console.log(order)
+            return {
+                _id: order._id,
+                user :   order.user,
+                order_items: order.order[0].book,
+                orderid : order.order[0].orderid,
+                paymentid : order.order[0].paymentid,
+                amount : order.order[0].amount,
+                address: order.order[0].address,
+                orderDate: order.orderDate,
+                coupon_code : order.order[0].coupon_code,
+                isOrderComleted: order.isOrderCompleted,
+                isPaymentCompleted: order.isPaymentCompleted,
+                shiporderid : order.shiporderid,
+                shippingid : order.shippingid
+            }
+            
+        })
+        res.status(200).json(
+            orderWithAddress
+        );
     })
     .catch(error => {
         res.status(500).json({
@@ -168,30 +172,34 @@ router.post('/updateorder/:orderid', (req,res,next) => {
 
 router.get('/getorderbyid/:orderid', (req, res, next) => {
     Order.find({"order.orderid": req.params.orderid})
-    .select('order  isOrderCompleted orderDate isPaymentCompleted shiporderid shippingid')
-    .populate('order.book.bookdetail', 'book_name selling_price weight sku')
-    .populate('user')
+    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
+    .populate('order.book.bookdetail', 'book_name sku selling_price weight')
+    .populate('user order.coupon_code')
     .exec()
     .then(orders => {
-                let orderWithAddress = orders.map(order => {
-                    return {
-                        _id: order._id,
-                        user :   order.user._id,
-                        order_items: order.order[0].book,
-                        orderid : order.order[0].orderid,
-                        paymentid : order.order[0].paymentid,
-                        amount : order.order[0].amount,
-                        address: order.order[0].address,
-                        orderDate: order.orderDate,
-                        isOrderComleted: order.isOrderCompleted,
-                        isPaymentCompleted: order.isPaymentCompleted,
-                        shiporderid : order.shiporderid,
-                        shippingid : order.shippingid
-                    }
-                })
-                res.status(200).json(
-                    orderWithAddress
-                );
+        
+         let orderWithAddress = orders.map(order => {
+            console.log(order)
+            return {
+                _id: order._id,
+                user :   order.user,
+                order_items: order.order[0].book,
+                orderid : order.order[0].orderid,
+                paymentid : order.order[0].paymentid,
+                amount : order.order[0].amount,
+                address: order.order[0].address,
+                orderDate: order.orderDate,
+                coupon_code : order.order[0].coupon_code,
+                isOrderComleted: order.isOrderCompleted,
+                isPaymentCompleted: order.isPaymentCompleted,
+                shiporderid : order.shiporderid,
+                shippingid : order.shippingid
+            }
+            
+        })
+        res.status(200).json(
+            orderWithAddress
+        );
     })
     .catch(error => {
         res.status(500).json({
@@ -202,32 +210,37 @@ router.get('/getorderbyid/:orderid', (req, res, next) => {
 router.get('/getallorders', (req, res, next) => {
     const val = false;
     Order.find()
-    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid')
+    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
     .populate('order.book.bookdetail', 'book_name sku selling_price weight')
-    .populate('user')
+    .populate('user order.coupon_code')
     .exec()
     .then(orders => {
+        
         let orderWithAddress = orders.map(order => {
+            console.log(order)
             return {
                 _id: order._id,
-                user :   order.user._id,
+                user :   order.user,
                 order_items: order.order[0].book,
                 orderid : order.order[0].orderid,
                 paymentid : order.order[0].paymentid,
                 amount : order.order[0].amount,
                 address: order.order[0].address,
                 orderDate: order.orderDate,
+                coupon_code : order.order[0].coupon_code,
                 isOrderComleted: order.isOrderCompleted,
                 isPaymentCompleted: order.isPaymentCompleted,
                 shiporderid : order.shiporderid,
                 shippingid : order.shippingid
             }
         })
+       
         res.status(200).json(
             orderWithAddress
         );
     })
     .catch(error => {
+        console.log(error)
         res.status(500).json({
             error: error
         });
