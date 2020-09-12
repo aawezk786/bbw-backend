@@ -86,4 +86,28 @@ router.post('/signup', (req, res, next) => {
         });
 });
 
+router.get('/getall',(req,res,next) =>{
+    Admin.find({role:'Admin'})
+    .exec()
+    .then( data => {
+        res.status(200).json(data)
+    })
+    .catch( err => {
+        next(err)
+    })
+})
+router.delete('/:adminId',(req,res,next) =>{
+    const id = req.params.adminId;
+    Admin.deleteOne({ _id: id }).exec()
+        .then(result => {
+            res.status(200).json({
+                message: "Admin Deleted Successfully",
+                result
+            });
+        })
+        .catch( err => {
+            next(err)
+        })
+})
+
 module.exports = router;
