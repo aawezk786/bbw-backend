@@ -18,7 +18,6 @@ router.post('/login', (req, res, next) => {
                 if (result) {
                     const token = jwt.sign({
                         name: admin[0].name,
-                        email: admin[0].email,
                         phonenumber: admin[0].phonenumber,
                         role: admin[0].role,
                         adminId: admin[0]._id
@@ -43,10 +42,10 @@ router.post('/login', (req, res, next) => {
 
 
 router.post('/signup', (req, res, next) => {
-    Admin.find({ phonenumber: req.body.phonenumber })
+    Admin.find({ phonenumber: req.body.phonenumber  })
         .exec()
         .then(data => {
-            if (data.length > 1) {
+            if (data.length >= 1) {
                 res.json({
                     message: "Admin Already Exist",
                     detail: data
@@ -59,7 +58,6 @@ router.post('/signup', (req, res, next) => {
                         const admin = new Admin({
                             _id: new mongoose.Types.ObjectId(),
                             name: req.body.name,
-                            email : req.body.email,
                             role: req.body.role,
                             phonenumber: req.body.phonenumber,
                             password: hash
