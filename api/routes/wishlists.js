@@ -92,4 +92,21 @@ router.delete('/:WishlistId', checkAuth, (req, res, next) => {
 });
 
 
+router.delete('/w/:WishlistId', checkAuth, (req, res, next) => {
+    const id = req.params.WishlistId;
+   
+    Wishlist.deleteOne({ _id : id}).exec()
+        .then(result => {
+            res.status(200).json({
+                message: "Book deleted From Wishlist",
+                result: result
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
 module.exports = router;
