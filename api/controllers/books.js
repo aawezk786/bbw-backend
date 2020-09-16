@@ -3,12 +3,26 @@ const mongoose = require('mongoose');
 const xlsx = require('xlsx');
 const async = require('async');
 const Category = require('../models/category');
+const { json } = require('body-parser');
 
 
 exports.saveBooks = (req, res, next) => {
+
+    // Book.insertMany(req.body,function(err,result){
+    //     if(err){
+    //         return err
+    //     }else{
+    //         console.log(result)
+    //     }
+    // })
+   console.log(req.file)
+  let url =  req.file.path;
     let data = []
-    let wb = xlsx.readFile(req.file.path);
+
+ 
+    let wb = xlsx.readFile(url);
     let ws = wb.SheetNames;
+    console.log(wb)
     let we = wb.Sheets[ws];   
      data = xlsx.utils.sheet_to_json(we);
 
@@ -247,6 +261,7 @@ exports.latestBooks =  (req, res, next) => {
 
 exports.popularbook =  (req, res, next) => {
 
+    
     const mysort = { _id: 1 };
     async.parallel([
         function (callback) {
