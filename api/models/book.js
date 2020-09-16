@@ -9,6 +9,21 @@ const bookSchema = mongoose.Schema({
         type: String
         
     },
+    active_bool:{
+        type:Number
+    },
+    mrp_dollar:{
+        type:Number
+    },
+    mrp_euro:{
+        type:Number
+    },
+    mrp_pound:{
+        type:Number
+    },
+    mrp_aus_dollar:{
+        type:Number
+    },
     author_name: {
         type: String
     },
@@ -28,21 +43,14 @@ const bookSchema = mongoose.Schema({
         type: String
         
     },
-    print_type: {
+    print_format: {
         type: String
         
     },
-    mrp: {
+    mrp_inr: {
         type: Number
     },
-    selling_price: {
-        type: Number
-       
-    },
-    saved_price: {
-        type: Number
-        
-    },
+
     sale_price :{
         type: Number
         
@@ -60,6 +68,9 @@ const bookSchema = mongoose.Schema({
     },
     no_Of_pages: {
         type: Number
+    },
+    rate : {
+        type : Number
     },
     language: {
         type: String
@@ -89,11 +100,26 @@ const bookSchema = mongoose.Schema({
         type : String
     },
     discount_per:{
-        type : String
+        type : Number
+    },
+    discount_rs:{
+        type : Number
     },
     excel_file : {
         type : String
-    }
+    },
+    final_price:{
+        type:Number
+    },
+    sale_disc_per:{
+        type:Number
+    },
+    sale_disc_inr:{
+        type:Number
+    },
+    sale_rate:{
+        type:Number
+    },
 },{
     toObject : {virtuals : true},
     toJSON : {virtuals : true}

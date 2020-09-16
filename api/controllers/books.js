@@ -12,45 +12,57 @@ exports.saveBooks = (req, res, next) => {
     let data = xlsx.utils.sheet_to_json(we);
     data.map((record) => {
         let book_name = record.book_name;
+        let active_bool = record.active_bool;
+        let mrp_dollar = record.mrp_dollar;
+        let mrp_euro = record.mrp_euro;
+        let mrp_aus_dollar = record.mrp_aus_dollar;
+        let mrp_pound = record.mrp_pound;
         let author_name = record.author_name;
         let Isbn_no = record.Isbn_no;
         let publisher = record.publisher;
         let condition = record.condition;
-        let print_type = record.print_type;
-        let mrp = record.mrp;
-        let selling_price = record.selling_price;
-        let saved_price = record.saved_price;
+        let print_format = record.print_format;
+        let mrp_inr = record.mrp_inr;
         let sale_price = record.sale_price;
         let description = record.description;
         let publication_year = record.publication_year;
         let no_Of_pages = record.no_Of_pages;
         let language = record.language;
         let dimensions = record.dimensions;
+        let rate = record.rate;
         let weight = record.weight;
         let categories = record.categories;
-        let subcategory1 = record.subcategory1;
+        let subcategory = record.subcategory;
         let quantity = record.quantity;
         let sku = record.sku;
         let country_origin = record.country_origin;
         let book_img = [
-            record.book_img1,
-            record.book_img2,
-            record.book_img3,
-            record.book_img4
+            "https://booksimg.s3.us-east-2.amazonaws.com/" + record.book_img1,
+            "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img2,
+            "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img3,
+            "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img4
         ];
         let discount_per = record.discount_per;
+        let discount_rs = record.discount_rs;
+        let final_price = record.final_price;
+        let sale_disc_per = record.sale_disc_per;
+        let sale_disc_inr = record.sale_disc_inr;
+        let sale_rate = record.sale_rate;
         let books = new Book({
             _id: new mongoose.Types.ObjectId(),
             book_name: book_name,
+            active_bool: active_bool,
+            mrp_dollar: mrp_dollar,
+            mrp_euro: mrp_euro,
+            mrp_aus_dollar: mrp_aus_dollar,
+            mrp_pound: mrp_pound,
             author_name: author_name,
             Isbn_no: Isbn_no,
             book_img: book_img,
             publisher: publisher,
             condition: condition,
-            print_type: print_type,
-            mrp: mrp,
-            selling_price: selling_price,
-            saved_price: saved_price,
+            print_format: print_format,
+            mrp_inr: mrp_inr,
             sale_price: sale_price,
             description: description,
             publication_year: publication_year,
@@ -59,11 +71,17 @@ exports.saveBooks = (req, res, next) => {
             language: language,
             dimensions: dimensions,
             weight: weight,
+            rate: rate,
             categories: mongoose.Types.ObjectId(categories),
-            subcategory1 : mongoose.Types.ObjectId(subcategory1),
+            subcategory: mongoose.Types.ObjectId(subcategory),
             sku: sku,
-            country_origin : country_origin,
-            discount_per : discount_per,
+            country_origin: country_origin,
+            discount_per: discount_per,
+            discount_rs: discount_rs,
+            final_price: final_price,
+            sale_disc_per: sale_disc_per,
+            sale_disc_inr: sale_disc_inr,
+            sale_rate: sale_rate,
             excel_file: req.file.path
         });
         books.save().then(result => {
