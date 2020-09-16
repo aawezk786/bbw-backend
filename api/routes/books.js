@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
         cb(null, './uploaded_excel/');
     },
     filename: function (req, file, cb) {
-        cb(null, new Date() + " " + file.originalname);
+        cb(null, Date.now().toString() + " " + file.originalname);
     }
 });
 const fileFilter = (req, file, cb) => {
