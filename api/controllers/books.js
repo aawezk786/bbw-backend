@@ -6,48 +6,51 @@ const Category = require('../models/category');
 
 
 exports.saveBooks = (req, res, next) => {
+    let data = []
     let wb = xlsx.readFile(req.file.path);
     let ws = wb.SheetNames;
     let we = wb.Sheets[ws];   
-    let data = xlsx.utils.sheet_to_json(we);
-    data.map((record) => {
-        let book_name = record.book_name;
-        let active_bool = record.active_bool;
-        let mrp_dollar = record.mrp_dollar;
-        let mrp_euro = record.mrp_euro;
-        let mrp_aus_dollar = record.mrp_aus_dollar;
-        let mrp_pound = record.mrp_pound;
-        let author_name = record.author_name;
-        let Isbn_no = record.Isbn_no;
-        let publisher = record.publisher;
-        let condition = record.condition;
-        let print_format = record.print_format;
-        let mrp_inr = record.mrp_inr;
-        let sale_price = record.sale_price;
-        let description = record.description;
-        let publication_year = record.publication_year;
-        let no_Of_pages = record.no_Of_pages;
-        let language = record.language;
-        let dimensions = record.dimensions;
-        let rate = record.rate;
-        let weight = record.weight;
-        let categories = record.categories;
-        let subcategory = record.subcategory;
-        let quantity = record.quantity;
-        let sku = record.sku;
-        let country_origin = record.country_origin;
+     data = xlsx.utils.sheet_to_json(we);
+
+    for (let i = 0; i < data.length; i++) {
+        
+        let book_name = data[i].book_name;
+        let active_bool = data[i].active_bool;
+        let mrp_dollar = data[i].mrp_dollar;
+        let mrp_euro = data[i].mrp_euro;
+        let mrp_aus_dollar = data[i].mrp_aus_dollar;
+        let mrp_pound = data[i].mrp_pound;
+        let author_name = data[i].author_name;
+        let Isbn_no = data[i].Isbn_no;
+        let publisher = data[i].publisher;
+        let condition = data[i].condition;
+        let print_format = data[i].print_format;
+        let mrp_inr = data[i].mrp_inr;
+        let sale_price = data[i].sale_price;
+        let description = data[i].description;
+        let publication_year = data[i].publication_year;
+        let no_Of_pages = data[i].no_Of_pages;
+        let language = data[i].language;
+        let dimensions = data[i].dimensions;
+        let rate = data[i].rate;
+        let weight = data[i].weight;
+        let categories = data[i].categories;
+        let subcategory = data[i].subcategory;
+        let quantity = data[i].quantity;
+        let sku = data[i].sku;
+        let country_origin = data[i].country_origin;
         let book_img = [
-            "https://booksimg.s3.us-east-2.amazonaws.com/" + record.book_img1,
-            "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img2,
-            "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img3,
-            "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img4
+            "https://booksimg.s3.us-east-2.amazonaws.com/" + data[i].book_img1,
+            "https://booksimg.s3.us-east-2.amazonaws.com/" +data[i].book_img2,
+            "https://booksimg.s3.us-east-2.amazonaws.com/" +data[i].book_img3,
+            "https://booksimg.s3.us-east-2.amazonaws.com/" +data[i].book_img4
         ];
-        let discount_per = record.discount_per;
-        let discount_rs = record.discount_rs;
-        let final_price = record.final_price;
-        let sale_disc_per = record.sale_disc_per;
-        let sale_disc_inr = record.sale_disc_inr;
-        let sale_rate = record.sale_rate;
+        let discount_per = data[i].discount_per;
+        let discount_rs = data[i].discount_rs;
+        let final_price = data[i].final_price;
+        let sale_disc_per = data[i].sale_disc_per;
+        let sale_disc_inr = data[i].sale_disc_inr;
+        let sale_rate = data[i].sale_rate;
         let books = new Book({
             _id: new mongoose.Types.ObjectId(),
             book_name: book_name,
@@ -72,8 +75,8 @@ exports.saveBooks = (req, res, next) => {
             dimensions: dimensions,
             weight: weight,
             rate: rate,
-            categories: mongoose.Types.ObjectId(categories),
-            subcategory: mongoose.Types.ObjectId(subcategory),
+            categories:categories,
+            subcategory:subcategory,
             sku: sku,
             country_origin: country_origin,
             discount_per: discount_per,
@@ -94,8 +97,94 @@ exports.saveBooks = (req, res, next) => {
             res.status(500).json({
                 error: err
             });
-        })
-    });
+        }) 
+    }
+    // data.map((record) => {
+    //     let book_name = record.book_name;
+    //     let active_bool = record.active_bool;
+    //     let mrp_dollar = record.mrp_dollar;
+    //     let mrp_euro = record.mrp_euro;
+    //     let mrp_aus_dollar = record.mrp_aus_dollar;
+    //     let mrp_pound = record.mrp_pound;
+    //     let author_name = record.author_name;
+    //     let Isbn_no = record.Isbn_no;
+    //     let publisher = record.publisher;
+    //     let condition = record.condition;
+    //     let print_format = record.print_format;
+    //     let mrp_inr = record.mrp_inr;
+    //     let sale_price = record.sale_price;
+    //     let description = record.description;
+    //     let publication_year = record.publication_year;
+    //     let no_Of_pages = record.no_Of_pages;
+    //     let language = record.language;
+    //     let dimensions = record.dimensions;
+    //     let rate = record.rate;
+    //     let weight = record.weight;
+    //     let categories = record.categories;
+    //     let subcategory = record.subcategory;
+    //     let quantity = record.quantity;
+    //     let sku = record.sku;
+    //     let country_origin = record.country_origin;
+    //     let book_img = [
+    //         "https://booksimg.s3.us-east-2.amazonaws.com/" + record.book_img1,
+    //         "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img2,
+    //         "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img3,
+    //         "https://booksimg.s3.us-east-2.amazonaws.com/" +record.book_img4
+    //     ];
+    //     let discount_per = record.discount_per;
+    //     let discount_rs = record.discount_rs;
+    //     let final_price = record.final_price;
+    //     let sale_disc_per = record.sale_disc_per;
+    //     let sale_disc_inr = record.sale_disc_inr;
+    //     let sale_rate = record.sale_rate;
+    //     let books = new Book({
+    //         _id: new mongoose.Types.ObjectId(),
+    //         book_name: book_name,
+    //         active_bool: active_bool,
+    //         mrp_dollar: mrp_dollar,
+    //         mrp_euro: mrp_euro,
+    //         mrp_aus_dollar: mrp_aus_dollar,
+    //         mrp_pound: mrp_pound,
+    //         author_name: author_name,
+    //         Isbn_no: Isbn_no,
+    //         book_img: book_img,
+    //         publisher: publisher,
+    //         condition: condition,
+    //         print_format: print_format,
+    //         mrp_inr: mrp_inr,
+    //         sale_price: sale_price,
+    //         description: description,
+    //         publication_year: publication_year,
+    //         quantity: quantity,
+    //         no_Of_pages: no_Of_pages,
+    //         language: language,
+    //         dimensions: dimensions,
+    //         weight: weight,
+    //         rate: rate,
+    //         categories: mongoose.Types.ObjectId(categories),
+    //         subcategory: mongoose.Types.ObjectId(subcategory),
+    //         sku: sku,
+    //         country_origin: country_origin,
+    //         discount_per: discount_per,
+    //         discount_rs: discount_rs,
+    //         final_price: final_price,
+    //         sale_disc_per: sale_disc_per,
+    //         sale_disc_inr: sale_disc_inr,
+    //         sale_rate: sale_rate,
+    //         excel_file: req.file.path
+    //     });
+    //     books.save().then(result => {
+    //         console.log(result);
+    //         res.status(201).json({
+    //             message: 'Created Product Successfully'
+    //         });
+    //     }).catch(err => {
+    //         console.log(err);
+    //         res.status(500).json({
+    //             error: err
+    //         });
+    //     })
+    // });
 
 }
 
