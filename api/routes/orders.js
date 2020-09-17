@@ -8,7 +8,27 @@ const checkAuth = require('../middleware/check-auth');
 const Coupon = require('../models/coupon');
 var cron = require('node-cron');
 const request = require('request');
+const multer = require('multer');
 let shiprocketToken;
+
+const multerS3 = require('multer-s3');
+const aws = require('aws-sdk');
+
+const s3 = new aws.S3({ accessKeyId: 'AKIAJZRZZA5E7WNYVRCA', secretAccessKey: '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' });
+
+let uploadsingle = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: 'bbwinvoice',
+        metadata: function (req, file, cb) {
+            cb(null, { fieldName: file.fieldname });
+        },
+        key: function (req, file, cb) {
+            cb(null, file.originalname)
+        },
+
+    })
+});
 const options = {
     url: 'https://apiv2.shiprocket.in/v1/external/auth/login',
     json: true,
@@ -25,6 +45,7 @@ const options = {
 };
 var crypto = require('crypto');
 var Razorpay = require('razorpay');
+const order = require('../models/order');
 let instance = new Razorpay({
     // key_id: 'rzp_live_Ztkdvk7oPSuPCy', 
     // key_secret: 'ooHzXexh9cIX2wXnZbVt3wg1' 
@@ -210,14 +231,13 @@ router.get('/getorderbyid/:orderid', (req, res, next) => {
 router.get('/getallorders', (req, res, next) => {
     const val = false;
     Order.find()
-    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
+    .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid invoiceurl')
     .populate('order.book.bookdetail', 'book_name sku selling_price weight')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {
         
         let orderWithAddress = orders.map(order => {
-            console.log(order)
             return {
                 _id: order._id,
                 user :   order.user,
@@ -231,7 +251,8 @@ router.get('/getallorders', (req, res, next) => {
                 isOrderComleted: order.isOrderCompleted,
                 isPaymentCompleted: order.isPaymentCompleted,
                 shiporderid : order.shiporderid,
-                shippingid : order.shippingid
+                shippingid : order.shippingid,
+                invoiceurl : order.invoiceurl
             }
         })
        
@@ -256,4 +277,22 @@ router.get('/getallorders', (req, res, next) => {
 //         console.log(shiprocketToken);
 //     });
 //   });
+
+
+router.post('/invoice/:orderId',uploadsingle.single('invoice'),(req,res,next)=>{
+    const query = {"order.orderid" : req.params.orderId};
+    const newvalue = {$set : {"invoiceurl" : req.file.location}};
+    Order.updateOne(query,newvalue)
+    .then(data=>{
+        res.status(200).json({
+            message : "invoice has been uploaded",
+            url : req.file.location
+        });
+    })
+    .catch(err=>{
+        next(err)
+    })
+});
+
+
 module.exports = router;

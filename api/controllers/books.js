@@ -7,14 +7,6 @@ const { json } = require('body-parser');
 
 
 exports.saveBooks = (req, res, next) => {
-
-    // Book.insertMany(req.body,function(err,result){
-    //     if(err){
-    //         return err
-    //     }else{
-    //         console.log(result)
-    //     }
-    // })
    console.log(req.file)
   let url =  req.file.path;
     let data = []

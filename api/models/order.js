@@ -31,6 +31,7 @@ const orderSchema = mongoose.Schema({
         }
         
     ],
+    invoiceurl: {type: String},
     shippingid: { type: Number },
     shiporderid: {type : Number},
     isPaymentCompleted : {type: Boolean,default : false},
