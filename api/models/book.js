@@ -10,7 +10,8 @@ const bookSchema = mongoose.Schema({
         
     },
     active_bool:{
-        type:Number
+        type:Number,
+        default : 1
     },
     mrp_dollar:{
         type:String

@@ -135,7 +135,7 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     const userId = req.userData.userId;
     Order.find({"user": userId})
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
-    .populate('order.book.bookdetail', 'book_name sku selling_price weight')
+    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {
@@ -194,7 +194,7 @@ router.post('/updateorder/:orderid', (req,res,next) => {
 router.get('/getorderbyid/:orderid', (req, res, next) => {
     Order.find({"order.orderid": req.params.orderid})
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
-    .populate('order.book.bookdetail', 'book_name sku selling_price weight')
+    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {
@@ -232,7 +232,7 @@ router.get('/getallorders', (req, res, next) => {
     const val = false;
     Order.find()
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid invoiceurl')
-    .populate('order.book.bookdetail', 'book_name sku selling_price weight')
+    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {
