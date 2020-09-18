@@ -102,7 +102,7 @@ router.post('/verify', checkAuth, (req, res, next) => {
         isPaymentCompleted: "true"
     })
     body = req.query.razorpay_order_id + "|" + req.query.razorpay_payment_id;
-    var expectedSignature = crypto.createHmac('sha256', 'TpJ7W7kEA7NuwqtPwno8NQhl')
+    var expectedSignature = crypto.createHmac('sha256', 'uUXOT1421l8Zb7Mack8eFAzI')
         .update(body.toString())
         .digest('hex');
     console.log("sig" + req.query.razorpay_signature);
