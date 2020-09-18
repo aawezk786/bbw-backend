@@ -1,4 +1,5 @@
 const Book = require('../models/book');
+const Books = require('../models/book');
 const mongoose = require('mongoose');
 const xlsx = require('xlsx');
 const async = require('async');
@@ -54,7 +55,7 @@ exports.saveBooks = (req, res, next) => {
         let sale_disc_per = record.sale_disc_per;
         let sale_disc_inr = record.sale_disc_inr;
         let sale_rate = record.sale_rate;
-        let books = new Book({
+        let books = new Books({
             _id: new mongoose.Types.ObjectId(),
             book_name: book_name,
             active_bool: active_bool,
