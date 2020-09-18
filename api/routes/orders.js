@@ -49,8 +49,8 @@ const order = require('../models/order');
 let instance = new Razorpay({
     // key_id: 'rzp_live_Ztkdvk7oPSuPCy', 
     // key_secret: 'ooHzXexh9cIX2wXnZbVt3wg1' 
-    key_id: 'rzp_test_ImeRpaCPi1JD7v', 
-    key_secret: 'TpJ7W7kEA7NuwqtPwno8NQhl' 
+    key_id: 'rzp_test_71mNw1EKfYn4AM', 
+    key_secret: 'uUXOT1421l8Zb7Mack8eFAzI' 
   })
   request.post(options, (err, res, body) => {
     if (err) {
