@@ -85,12 +85,12 @@ const bookSchema = mongoose.Schema({
         
     },
     categories: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         ref: 'Category'
         
     },
     subcategory : {
-        type : mongoose.Schema.Types.ObjectId,
+        type : String,
         ref: 'Subcategory'
     },
     sku : {
