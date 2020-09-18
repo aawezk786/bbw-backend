@@ -235,7 +235,7 @@ exports.getBooksByCats = (req, res, next) => {
             });
         },
         function (callback) {
-            const mysort = { mrp_inr: 1 };
+            const mysort = { final_price: 1 };
             Book.find({ categories: req.params.catId }).sort(mysort)
                 .populate('categories')
                 .exec((err, books) => {
@@ -272,7 +272,7 @@ exports.getBooksBySubCats = (req, res, next) => {
             });
         },
         function (callback) {
-            const mysort = { mrp_inr: 1 };
+            const mysort = { final_price: 1 };
             Book.find({ subcategory: req.params.catId }).sort(mysort)
                 .populate('categories')
                 .exec((err, books) => {

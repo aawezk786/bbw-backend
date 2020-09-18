@@ -96,7 +96,7 @@ router.get('/filter/new', (req, res) => {
   var asc = req.query.sortBy == 'asc';
   var desc = req.query.sortBy == 'desc';
   if (asc) {
-    const mysort = { selling_price: 1 };
+    const mysort = { final_price: 1 };
     Book.countDocuments({ condition: "New" }, (err, count) => {
       var totalBooks = count;
       Book.find({ condition: "New" }).sort(mysort).exec()
@@ -115,7 +115,7 @@ router.get('/filter/new', (req, res) => {
     });
   }
   if (desc) {
-    const mysort = { selling_price: -1 };
+    const mysort = { final_price: -1 };
     Book.countDocuments({ condition: "New" }, (err, count) => {
       var totalBooks = count;
       Book.find({ condition: "New" }).sort(mysort).exec()
@@ -145,7 +145,7 @@ router.get('/filter/preowned', (req, res) => {
   var condition = req.query.condition = 'Pre';
   var regex = new RegExp(condition.toLowerCase(), 'i');
   if (asc) {
-    const mysort = { selling_price: 1 };
+    const mysort = { final_price: 1 };
     Book.countDocuments({ condition: regex }, (err, count) => {
       var totalBooks = count;
       Book.find({ condition: regex }).sort(mysort).exec()
@@ -164,7 +164,7 @@ router.get('/filter/preowned', (req, res) => {
     });
   }
   if (desc) {
-    const mysort = { selling_price: -1 };
+    const mysort = { final_price: -1 };
     Book.countDocuments({ condition: regex }, (err, count) => {
       var totalBooks = count;
       Book.find({ condition: regex }).sort(mysort).exec()
@@ -193,10 +193,10 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
   const second = req.params.second;
   var condition = req.query.condition;
   var regex = new RegExp(condition.toLowerCase(), 'i');
-  Book.countDocuments({ selling_price: { $gte: (first), $lte: (second) }, condition: regex }, (err, count) => {
+  Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, condition: regex }, (err, count) => {
     var totalBooks = count;
-    const mysort = { selling_price: 1 };
-    Book.find({ selling_price: { $gte: (first), $lte: (second) }, condition: regex }).sort(mysort).exec()
+    const mysort = { final_price: 1 };
+    Book.find({ final_price: { $gte: (first), $lte: (second) }, condition: regex }).sort(mysort).exec()
       .then(result => {
         res.status(200).json({
           success: true,
