@@ -39,7 +39,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
                             quantity: item ? (parseInt(item.quantity) + parseInt(req.query.quantity)) : req.query.quantity,
                             price: req.query.price,
                             total: item ? req.query.price * (parseInt(item.quantity) + parseInt(req.query.quantity)) : (req.query.price * req.query.quantity),
-                            weight: item ? req.query.weight * (parseInt(item.quantity) + parseInt(req.query.quantity)) : (req.query.weight * req.query.quantity) / 1000
+                            weight: item ? req.query.weight * (parseInt(item.quantity) + parseInt(req.query.quantity)) : (req.query.weight * req.query.quantity) 
                         }
                     }
                 })
@@ -68,7 +68,7 @@ router.post('/:bookId', checkAuth, (req, res, next) => {
                             quantity: req.query.quantity,
                             price: req.query.price,
                             total: req.query.quantity * req.query.price,
-                            weight: req.query.quantity * req.query.weight / 1000
+                            weight: req.query.quantity * req.query.weight 
                         }
                     ]
                 });
