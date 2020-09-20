@@ -168,7 +168,7 @@ router.put('/update/quantity', checkAuth, (req, res, next) => {
         $set: {
             "cart.$.quantity": quantity,
             "cart.$.total": quantity * price,
-            "cart.$.weight": quantity * weight / 1000
+            "cart.$.weight": quantity * weight 
         }
     })
         .exec()
