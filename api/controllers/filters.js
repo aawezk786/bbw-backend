@@ -58,8 +58,9 @@ exports.sortBy = (req, res, next) => {
         Book.countDocuments({ final_price: { $gte: (first), $lte: (second) } }, (err, count) => {
             var totalBooks = count;
             const mysort = { final_price: 1 };
-            Book.find({ final_price: { $gte: (first), $lte: (second) } }).sort(mysort).exec()
+            Book.find({ final_price: { $gte: (first), $lte: (second) } }).exec()
                 .then(result => {
+                    console.log(result)
                     res.status(200).json({
                         success: true,
                         books: result,
@@ -69,6 +70,9 @@ exports.sortBy = (req, res, next) => {
                 .catch(error => {
                    next(error)
                 });
+                if(err){
+                    console.log(err)
+                }
         });
 
 

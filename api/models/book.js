@@ -109,7 +109,7 @@ const bookSchema = mongoose.Schema({
         type : String
     },
     final_price:{
-        type:Number
+        type:String
     },
     sale_disc_per:{
         type:String
