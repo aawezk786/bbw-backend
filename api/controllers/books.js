@@ -249,7 +249,17 @@ exports.getBooksByCats = (req, res, next) => {
             });
         }
     ], function (err, results) {
-        var totalBooks = results[0];
+        
+        if(err){
+            res.json({
+                success: false,
+                books: [],
+                totalBooks: 0
+    
+            });
+        }
+        else{
+            var totalBooks = results[0];
         var books = results[1];
         var categories = results[2];
         res.json({
@@ -259,6 +269,7 @@ exports.getBooksByCats = (req, res, next) => {
             totalBooks: totalBooks
 
         });
+        }
     });
 }
 
@@ -272,7 +283,7 @@ exports.getBooksBySubCats = (req, res, next) => {
             });
         },
         function (callback) {
-            const mysort = { final_price: 1 };
+            const mysort = { final_price : -1 };
             Book.find({ subcategory: req.params.catId }).sort(mysort)
                 .populate('categories')
                 .exec((err, books) => {
@@ -286,16 +297,27 @@ exports.getBooksBySubCats = (req, res, next) => {
             });
         }
     ], function (err, results) {
-        var totalBooks = results[0];
-        var books = results[1];
-        var categories = results[2];
-        res.json({
-            success: true,
-            message: categories,
-            books: books,
-            totalBooks: totalBooks
-
-        });
+        
+        if(err){
+            res.json({
+                success: false,
+                books: [],
+                totalBooks: 0
+    
+            });
+        }
+        else{
+            var totalBooks = results[0];
+            var books = results[1];
+            var categories = results[2];
+            res.status.json({
+                success: true,
+                message: categories,
+                books: books,
+                totalBooks: totalBooks
+    
+            });
+        }
     });
 }
 

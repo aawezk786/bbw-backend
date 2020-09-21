@@ -10,8 +10,7 @@ const bookSchema = mongoose.Schema({
         
     },
     active_bool:{
-        type:Number,
-        default : 1
+        type:Number
     },
     mrp_dollar:{
         type:String
@@ -110,7 +109,7 @@ const bookSchema = mongoose.Schema({
         type : String
     },
     final_price:{
-        type:String
+        type:Number
     },
     sale_disc_per:{
         type:String

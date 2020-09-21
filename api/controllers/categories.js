@@ -25,7 +25,7 @@ exports.create_cats = (req, res, next) => {
 
 
 exports.getall_cats = (req,res,next)=>{
-    Category.find().populate('subcategory')
+    Category.find().sort({category : 1}).populate('subcategory')
     .exec()
     .then(docs =>{
         if(docs.length >=0){
