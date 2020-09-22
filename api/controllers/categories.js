@@ -55,3 +55,22 @@ exports.deleteCats = (req,res,next)=>{
 }
 
 
+exports.deleteSubcats =  (req, res, next) => {
+    const subcatId = req.query.subcatId;
+    const catId = req.params.catId
+    Category.findOneAndUpdate({ _id: catId }, { $pull: { "subcategory": { _id: subcatId } } }).exec()
+        .then(result => {
+            if (result) {
+                res.status(200).json({
+                    message: "Subcategory Is Deleted From Category"
+                });
+            }
+
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+}
+
