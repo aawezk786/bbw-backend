@@ -310,7 +310,7 @@ exports.getBooksBySubCats = (req, res, next) => {
             var totalBooks = results[0];
             var books = results[1];
             var categories = results[2];
-            res.status.json({
+            res.json({
                 success: true,
                 message: categories,
                 books: books,
