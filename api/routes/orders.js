@@ -10,6 +10,11 @@ var cron = require('node-cron');
 const request = require('request');
 const multer = require('multer');
 let shiprocketToken;
+const pdf = require('pdf').pdf;
+const fs = require('fs');
+var doc = new pdf()
+
+
 
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');

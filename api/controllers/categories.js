@@ -41,5 +41,17 @@ exports.getall_cats = (req,res,next)=>{
     });
 }
 
+exports.deleteCats = (req,res,next)=>{
+    Category.deleteOne({_id : req.params.catId})
+    .exec()
+    .then(docs =>{
+        res.status(200).json({
+            message : "Category was Deleted"
+        })
+    })
+    .catch(err =>{
+        next(err);
+    });
+}
 
 
