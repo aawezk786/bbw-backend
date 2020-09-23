@@ -105,6 +105,9 @@ exports.saveBooks = (req, res, next) => {
 
 
 exports.getAllBooks = (req, res, next) => {
+
+    const perPage = 20;
+    const page = req.query.page;
     async.parallel([
         function (callback) {
             Book.countDocuments({}, (err, count) => {
@@ -115,6 +118,8 @@ exports.getAllBooks = (req, res, next) => {
         },
         function (callback) {
             Book.find({})
+                .skip(perPage * page)
+                .limit(perPage)
                 .populate('categories', 'category')
                 .exec((err, books) => {
                     if (err) return next(err);
@@ -124,13 +129,28 @@ exports.getAllBooks = (req, res, next) => {
     ], function (err, results) {
         var totalBooks = results[0];
         var books = results[1];
+        var pag = Math.ceil(totalBooks / perPage );
+        if(pag > page){
         res.status(200).json({
             success: true,
             books: books,
-            totalBooks: totalBooks
+            totalBooks: totalBooks,
+            pages: Math.ceil(totalBooks / perPage - 1)
         });
+    }else{
+        res.status(200).json({
+            success: false,
+            books: [],
+            totalBooks: 0,
+            pages: 0
+          });
+    }
         if (err) return next(err);
     });
+
+
+
+
 
 }
 
@@ -154,6 +174,7 @@ exports.latestBooks = (req, res, next) => {
             books: books,
             totalBooks: books.length
         });
+        if (err) return next(err);
     })
 
 }
@@ -179,6 +200,7 @@ exports.popularbook = (req, res, next) => {
             books: books,
             totalBooks: books.length
         });
+        if (err) return next(err);
     })
 
 }
@@ -226,6 +248,8 @@ exports.detailBooks = (req, res, next) => {
 
 
 exports.getBooksByCats = (req, res, next) => {
+    const perPage = 20;
+    const page = req.query.page;
 
     async.parallel([
         function (callback) {
@@ -236,7 +260,10 @@ exports.getBooksByCats = (req, res, next) => {
         },
         function (callback) {
             const mysort = { final_price: 1 };
-            Book.find({ categories: req.params.catId }).sort(mysort)
+            Book.find({ categories: req.params.catId })
+            .skip(perPage * page)
+            .limit(perPage)
+            .sort(mysort)
                 .populate('categories')
                 .exec((err, books) => {
                     if (err) return next(err);
@@ -249,32 +276,33 @@ exports.getBooksByCats = (req, res, next) => {
             });
         }
     ], function (err, results) {
-        
-        if(err){
+        var totalBooks = results[0];
+            var books = results[1];
+            var categories = results[2];
+        var pag = Math.ceil(totalBooks / perPage );
+        if(pag > page){
             res.json({
-                success: false,
-                books: [],
-                totalBooks: 0
-    
-            });
-        }
-        else{
-            var totalBooks = results[0];
-        var books = results[1];
-        var categories = results[2];
-        res.json({
             success: true,
             message: categories,
             books: books,
-            totalBooks: totalBooks
-
+            totalBooks: totalBooks,
+            pages: Math.ceil(totalBooks / perPage - 1)
         });
+        }else{
+            res.json({
+                success: false,
+                books: [],
+                totalBooks: 0,
+                pages: 0
+            });
         }
+        if(err) return next(err);
     });
 }
 
 exports.getBooksBySubCats = (req, res, next) => {
-
+    const perPage = 20;
+    const page = req.query.page;
     async.parallel([
         function (callback) {
             Book.countDocuments({ subcategory: req.params.catId }, (err, count) => {
@@ -284,8 +312,11 @@ exports.getBooksBySubCats = (req, res, next) => {
         },
         function (callback) {
             const mysort = { final_price : -1 };
-            Book.find({ subcategory: req.params.catId }).sort(mysort)
-                .populate('categories')
+            Book.find({ subcategory: req.params.catId })
+            .skip(perPage * page)
+            .limit(perPage)
+            .sort(mysort)
+                .populate('categories' ,'category')
                 .exec((err, books) => {
                     if (err) return next(err);
                     callback(err, books);
@@ -297,27 +328,28 @@ exports.getBooksBySubCats = (req, res, next) => {
             });
         }
     ], function (err, results) {
-        
-        if(err){
-            res.json({
-                success: false,
-                books: [],
-                totalBooks: 0
-    
-            });
-        }
-        else{
-            var totalBooks = results[0];
-            var books = results[1];
-            var categories = results[2];
+        var totalBooks = results[0];
+        var books = results[1];
+        var categories = results[2];
+        var pag = Math.ceil(totalBooks / perPage );
+        if(pag > page){
             res.json({
                 success: true,
                 message: categories,
                 books: books,
-                totalBooks: totalBooks
-    
+                totalBooks: totalBooks,
+                pages: Math.ceil(totalBooks / perPage - 1)
             });
         }
+        else{
+            res.json({
+                success: false,
+                books: [],
+                totalBooks: 0,
+                pages: 0
+            });
+        }
+        if(err) return next(err);
     });
 }
 

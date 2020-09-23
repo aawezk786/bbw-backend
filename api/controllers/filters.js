@@ -3,19 +3,35 @@ const mongoose = require('mongoose');
 const async = require('async');
 
 exports.sortBy = (req, res, next) => {
-    var asc = req.query.sortBy =='asc';
+    var asc = req.query.sortBy == 'asc';
     var desc = req.query.sortBy == 'desc';
+    const perPage = 20;
+    const page = req.query.page;
     if (asc) {
-        const mysort = { final_price : 1 };
+        const mysort = { final_price: 1 };
         Book.countDocuments({}, (err, count) => {
             var totalBooks = count;
-            Book.find().sort(mysort).exec()
+            Book.find()
+                .skip(perPage * page)
+                .limit(perPage)
+                .sort(mysort).exec()
                 .then(result => {
-                    res.status(200).json({
-                        success: true,
-                        books: result,
-                        totalBooks: totalBooks,
-                    });
+                    var pag = Math.ceil(totalBooks / perPage);
+                    if (pag > page) {
+                        res.status(200).json({
+                            success: true,
+                            books: result,
+                            totalBooks: totalBooks,
+                            pages: Math.ceil(totalBooks / perPage - 1)
+                        });
+                    } else {
+                        res.status(200).json({
+                            success: false,
+                            books: [],
+                            totalBooks: 0,
+                            pages: 0
+                        });
+                    }
                 })
                 .catch(error => {
                     res.status(500).json({
@@ -24,18 +40,32 @@ exports.sortBy = (req, res, next) => {
                 });
         });
     }
-    
+
     if (desc) {
-        const mysort = { final_price : -1 };
+        const mysort = { final_price: -1 };
         Book.countDocuments({}, (err, count) => {
             var totalBooks = count;
-            Book.find().sort(mysort).exec()
+            Book.find()
+                .skip(perPage * page)
+                .limit(perPage)
+                .sort(mysort).exec()
                 .then(result => {
-                    res.status(200).json({
-                        success: true,
-                        books: result,
-                        totalBooks: totalBooks,
-                    });
+                    var pag = Math.ceil(totalBooks / perPage);
+                    if (pag > page) {
+                        res.status(200).json({
+                            success: true,
+                            books: result,
+                            totalBooks: totalBooks,
+                            pages: Math.ceil(totalBooks / perPage - 1)
+                        });
+                    } else {
+                        res.status(200).json({
+                            success: false,
+                            books: result,
+                            totalBooks: 0,
+                            pages: 0
+                        });
+                    }
                 })
                 .catch(error => {
                     res.status(500).json({
@@ -44,37 +74,52 @@ exports.sortBy = (req, res, next) => {
                 });
         });
     }
-    if(!asc && !desc){
+    if (!asc && !desc) {
         res.status(404).json({
-            message : "Check Query"
+            message: "Check Query"
         });
     }
 }
 
-    exports.price_sort = (req, res, next) => {
-        const first = req.params.first;
-        const second = req.params.second;
-       
-        Book.countDocuments({ final_price: { $gte: (first), $lte: (second) } }, (err, count) => {
-            var totalBooks = count;
-            const mysort = { final_price: 1 };
-            Book.find({ final_price: { $gte: (first), $lte: (second) } }).exec()
-                .then(result => {
-                    console.log(result)
+exports.price_sort = (req, res, next) => {
+    const first = req.params.first;
+    const second = req.params.second;
+    const perPage = 20;
+    const page = req.query.page;
+
+    Book.countDocuments({ final_price: { $gte: (first), $lte: (second) } }, (err, count) => {
+        var totalBooks = count;
+        const mysort = { final_price: 1 };
+        Book.find({ final_price: { $gte: (first), $lte: (second) } })
+            .skip(perPage * page)
+            .limit(perPage)
+            .exec()
+            .then(result => {
+                var pag = Math.ceil(totalBooks / perPage);
+                if (pag > page) {
                     res.status(200).json({
                         success: true,
                         books: result,
                         totalBooks: totalBooks,
+                        pages: Math.ceil(totalBooks / perPage - 1)
                     });
-                })
-                .catch(error => {
-                   next(error)
-                });
-                if(err){
-                    console.log(err)
+                } else {
+                    res.status(200).json({
+                        success: false,
+                        books: result,
+                        totalBooks: 0,
+                        pages: 0
+                    });
                 }
-        });
+            })
+            .catch(error => {
+                next(error)
+            });
+        if (err) {
+            console.log(err)
+        }
+    });
 
 
 
-    }
+}
