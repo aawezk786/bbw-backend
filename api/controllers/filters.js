@@ -6,7 +6,7 @@ exports.sortBy = (req, res, next) => {
     var asc = req.query.sortBy == 'asc';
     var desc = req.query.sortBy == 'desc';
     const perPage = 20;
-    const page = req.query.page;
+    const page = req.query.page - 1;
     if (asc) {
         const mysort = { final_price: 1 };
         Book.countDocuments({}, (err, count) => {
@@ -22,7 +22,7 @@ exports.sortBy = (req, res, next) => {
                             success: true,
                             books: result,
                             totalBooks: totalBooks,
-                            pages: Math.ceil(totalBooks / perPage - 1)
+                            pages: Math.ceil(totalBooks / perPage )
                         });
                     } else {
                         res.status(200).json({
@@ -56,7 +56,7 @@ exports.sortBy = (req, res, next) => {
                             success: true,
                             books: result,
                             totalBooks: totalBooks,
-                            pages: Math.ceil(totalBooks / perPage - 1)
+                            pages: Math.ceil(totalBooks / perPage)
                         });
                     } else {
                         res.status(200).json({
@@ -85,12 +85,12 @@ exports.price_sort = (req, res, next) => {
     const first = req.params.first;
     const second = req.params.second;
     const perPage = 20;
-    const page = req.query.page;
+    const page = req.query.page - 1;
 
     Book.countDocuments({ final_price: { $gte: (first), $lte: (second) } }, (err, count) => {
         var totalBooks = count;
-        const mysort = { final_price: 1 };
-        Book.find({ final_price: { $gte: (first), $lte: (second) } })
+        const mysort = {  final_price : 1 };
+        Book.find({ final_price: { $gte: (first), $lte: (second) } }).select('final_price').sort(mysort)
             .skip(perPage * page)
             .limit(perPage)
             .exec()
@@ -101,9 +101,10 @@ exports.price_sort = (req, res, next) => {
                         success: true,
                         books: result,
                         totalBooks: totalBooks,
-                        pages: Math.ceil(totalBooks / perPage - 1)
+                        pages: Math.ceil(totalBooks / perPage)
                     });
-                } else {
+                } 
+                else {
                     res.status(200).json({
                         success: false,
                         books: result,

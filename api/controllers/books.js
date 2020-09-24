@@ -107,7 +107,7 @@ exports.saveBooks = (req, res, next) => {
 exports.getAllBooks = (req, res, next) => {
 
     const perPage = 20;
-    const page = req.query.page;
+    const page = req.query.page - 1;
     async.parallel([
         function (callback) {
             Book.countDocuments({}, (err, count) => {
@@ -135,7 +135,7 @@ exports.getAllBooks = (req, res, next) => {
             success: true,
             books: books,
             totalBooks: totalBooks,
-            pages: Math.ceil(totalBooks / perPage - 1)
+            pages: Math.ceil(totalBooks / perPage)
         });
     }else{
         res.status(200).json({
@@ -249,7 +249,7 @@ exports.detailBooks = (req, res, next) => {
 
 exports.getBooksByCats = (req, res, next) => {
     const perPage = 20;
-    const page = req.query.page;
+    const page = req.query.page - 1;
 
     async.parallel([
         function (callback) {
@@ -286,7 +286,7 @@ exports.getBooksByCats = (req, res, next) => {
             message: categories,
             books: books,
             totalBooks: totalBooks,
-            pages: Math.ceil(totalBooks / perPage - 1)
+            pages: Math.ceil(totalBooks / perPage)
         });
         }else{
             res.json({
@@ -302,7 +302,7 @@ exports.getBooksByCats = (req, res, next) => {
 
 exports.getBooksBySubCats = (req, res, next) => {
     const perPage = 20;
-    const page = req.query.page;
+    const page = req.query.page - 1;
     async.parallel([
         function (callback) {
             Book.countDocuments({ subcategory: req.params.catId }, (err, count) => {
@@ -338,7 +338,7 @@ exports.getBooksBySubCats = (req, res, next) => {
                 message: categories,
                 books: books,
                 totalBooks: totalBooks,
-                pages: Math.ceil(totalBooks / perPage - 1)
+                pages: Math.ceil(totalBooks / perPage)
             });
         }
         else{

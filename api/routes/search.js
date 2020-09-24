@@ -3,7 +3,7 @@ const router = express.Router();
 const Book = require('../models/book');
 router.get('/', async (req, res) => {
   const perPage = 20;
-  const page = req.query.page;
+  const page = req.query.page - 1;
   if (req.query.book_name == '1') {
     let searchKeyword = req.query.searchKeyword
       ? {
@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
       count: productslen + " " + "Results found",
       books: productsOP,
       totalBooks: productslen,
-      pages: Math.ceil(productslen / perPage - 1)
+      pages: Math.ceil(productslen / perPage)
     });
   }
   if (req.query.author_name == '1') {
@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
       count: productslen + " " + "Results found",
       books: productsOP,
       totalBooks: productslen,
-      pages: Math.ceil(productslen / perPage - 1)
+      pages: Math.ceil(productslen / perPage )
     });
   }
   if (req.query.publisher == '1') {
@@ -67,7 +67,7 @@ router.get('/', async (req, res) => {
       count: productslen + " " + "Results found",
       books: productsOP,
       totalBooks: productslen,
-      pages: Math.ceil(productslen / perPage - 1)
+      pages: Math.ceil(productslen / perPage)
     });
   }
   if (req.query.isbn == '1') {
@@ -89,7 +89,7 @@ router.get('/', async (req, res) => {
       count: productslen + " " + "Results found",
       books: productsOP,
       totalBooks: productslen,
-      pages: Math.ceil(productslen / perPage - 1)
+      pages: Math.ceil(productslen / perPage)
     });
   }
   res.json({
@@ -119,7 +119,7 @@ router.get('/books', async (req, res) => {
       count: productslen + " " + "Results found",
       books: productsOP,
       totalBooks: productslen,
-      pages: Math.ceil(productslen / perPage - 1)
+      pages: Math.ceil(productslen / perPage)
     });
   }
   res.json({
@@ -131,7 +131,7 @@ router.get('/filter/new', (req, res, next) => {
   var asc = req.query.sortBy == 'asc';
   var desc = req.query.sortBy == 'desc';
   const perPage = 20;
-  const page = req.query.page;
+  const page = req.query.page - 1;
   if (asc) {
     const mysort = { final_price: 1 };
     Book.countDocuments({ condition: "New" }, (err, count) => {
@@ -147,7 +147,7 @@ router.get('/filter/new', (req, res, next) => {
               success: true,
               books: result,
               totalBooks: totalBooks,
-              pages: Math.ceil(totalBooks / perPage - 1)
+              pages: Math.ceil(totalBooks / perPage)
             });
           } else {
             res.status(200).json({
@@ -178,7 +178,7 @@ router.get('/filter/new', (req, res, next) => {
               success: true,
               books: result,
               totalBooks: totalBooks,
-              pages: Math.ceil(totalBooks / perPage - 1)
+              pages: Math.ceil(totalBooks / perPage)
             });
           } else {
             res.status(200).json({
@@ -205,7 +205,7 @@ router.get('/filter/preowned', (req, res) => {
   var desc = req.query.sortBy == 'desc';
   var condition = req.query.condition = 'Pre';
   const perPage = 20;
-  const page = req.query.page;
+  const page = req.query.page - 1;
   var regex = new RegExp(condition.toLowerCase(), 'i');
   if (asc) {
     const mysort = { final_price: 1 };
@@ -223,7 +223,7 @@ router.get('/filter/preowned', (req, res) => {
               success: true,
               books: result,
               totalBooks: totalBooks,
-              pages: Math.ceil(totalBooks / perPage - 1)
+              pages: Math.ceil(totalBooks / perPage)
             });
           } else {
             res.status(200).json({
@@ -255,7 +255,7 @@ router.get('/filter/preowned', (req, res) => {
               success: true,
               books: result,
               totalBooks: totalBooks,
-              pages: Math.ceil(totalBooks / perPage - 1)
+              pages: Math.ceil(totalBooks / perPage)
             });
           } else {
             res.status(200).json({
@@ -281,7 +281,7 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
   const first = req.params.first;
   const second = req.params.second;
   const perPage = 20;
-  const page = req.query.page;
+  const page = req.query.page - 1;
   var condition = req.query.condition;
   var regex = new RegExp(condition.toLowerCase(), 'i');
   Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, condition: regex }, (err, count) => {
@@ -298,7 +298,7 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
             success: true,
             books: result,
             totalBooks: totalBooks,
-            pages: Math.ceil(totalBooks / perPage - 1)
+            pages: Math.ceil(totalBooks / perPage)
           });
         } else {
           res.status(200).json({

@@ -235,7 +235,11 @@ router.get('/getorderbyid/:orderid', (req, res, next) => {
 });
 router.get('/getallorders', (req, res, next) => {
     const val = false;
+    const perPage = 20;
+    const page = req.query.page - 1;
     Order.find()
+    .skip(perPage * page)
+    .limit(perPage)
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid invoiceurl')
     .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
     .populate('user order.coupon_code')
@@ -257,19 +261,28 @@ router.get('/getallorders', (req, res, next) => {
                 isPaymentCompleted: order.isPaymentCompleted,
                 shiporderid : order.shiporderid,
                 shippingid : order.shippingid,
-                invoiceurl : order.invoiceurl
+                invoiceurl : order.invoiceurl,
             }
         })
-       
-        res.status(200).json(
-            orderWithAddress
+        var pag = Math.ceil(orders.length / perPage );
+      var  pages = Math.ceil(orders.length / perPage)
+        if(pag > page){
+        res.status(200).json({
+            orderWithAddress,
+            pages
+        }
         );
+        }else{
+            res.json({
+                success: false,
+                orders: [],
+                pages: 0
+            });
+        }
     })
     .catch(error => {
         console.log(error)
-        res.status(500).json({
-            error: error
-        });
+        next(error)
     });
 });
 // cron.schedule('* * * * * *', () => {
