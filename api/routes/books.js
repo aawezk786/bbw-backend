@@ -7,7 +7,7 @@ const checkAuth = require('../middleware/check-auth');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 
-const s3 = new aws.S3({ accessKeyId: 'AKIAJZRZZA5E7WNYVRCA', secretAccessKey: '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' });
+const s3 = new aws.S3({ accessKeyId: 'AKIAIOMXD4WWU6OUC6AQ', secretAccessKey: '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' });
 
 let uploadsingle = multer({
     storage: multerS3({
@@ -53,5 +53,6 @@ router.get('/:bookId', BooksControllers.detailBooks);
 router.get('/categories/:catId', BooksControllers.getBooksByCats);
 router.get('/subcategory/:catId', BooksControllers.getBooksBySubCats);
 router.post('/singleBook', uploadsingle.array('book_img' ,4), BooksControllers.book_single_post);
-
+router.put('/updategoc/', BooksControllers.update_books);
+// router.put('/editBook/:id',uploadsingle.array('book_img' ,4),BooksControllers.EditBooks);
 module.exports = router;

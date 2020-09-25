@@ -4,8 +4,57 @@ const xlsx = require('xlsx');
 const async = require('async');
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
+const router = require('../routes/category');
 
 
+exports.update_books = (req, res, next) => {
+    let goc_dollar = req.body.goc_dollar;
+    let goc_euro = req.body.goc_euro;
+    let goc_aus_dollar = req.body.goc_aus_dollar;
+    let goc_pound = req.body.goc_pound;
+    Book.find().exec()
+    .then((result) =>{
+        let record = result
+        for (let i = 0; i < record.length; i++) {
+           if(record[i]['mrp_dollar']!=null || record[i]['mrp_euro']!=null || record[i]['mrp_aus_dollar']!=null ||record[i]['mrp_pound']!=null){
+            if(record[i]['mrp_dollar'] && goc_dollar != null  ){
+                record[i]['mrp_inr'] = Number(record[i]['mrp_dollar']) * goc_dollar
+            }else if(record[i]['mrp_euro'] && goc_euro != null){
+                record[i]['mrp_inr'] = Number(record[i]['mrp_euro']) * goc_euro
+            }else if(record[i]['mrp_aus_dollar'] && goc_aus_dollar != null){
+                record[i]['mrp_inr'] = Number(record[i]['mrp_aus_dollar']) * goc_aus_dollar
+
+            }else if(record[i]['mrp_pound'] && goc_pound != null){
+                record[i]['mrp_inr'] = Number(record[i]['mrp_pound']) * goc_pound
+            }else{
+                record[i]['mrp_inr'] = record[i]['final_price']
+            }
+           }
+           record[i]['discount_rs'] = record[i]['mrp_inr'] - record[i]['final_price']
+           record[i]['discount_per'] = record[i]['discount_rs'] / record[i]['mrp_inr'] * 100
+           record[i]['sale_disc_inr'] = record[i]['mrp_inr'] - record[i]['sale_price']
+           record[i]['sale_disc_per'] = record[i]['sale_disc_inr'] / record[i]['mrp_inr'] * 100
+
+            Book.updateOne({_id:record[i]._id},{$set:{mrp_inr:record[i].mrp_inr,
+                discount_rs:record[i].discount_rs,
+                discount_per:record[i].discount_per,
+                sale_disc_inr:record[i].sale_disc_inr,
+                sale_disc_per:record[i].sale_disc_per
+            }})
+            .then((data)=>{
+                console.log(record[i].mrp_inr)
+            })
+            .catch((error)=>{
+                next(error)
+            })
+        }
+        res.json("Updated Success")
+       
+    })
+    .catch(err=>{
+        next(err)
+    });
+}
 
 exports.saveBooks = (req, res, next) => {
     console.log(req.file)
@@ -506,7 +555,7 @@ exports.book_single_post = (req, res, next) => {
             subcategory: mongoose.Types.ObjectId(req.body.subcategory),
             sku: req.body.sku,
             country_origin: req.body.country_origin,
-            discount_per: req.body.discount_per,
+            discount_per: rupdateOneeq.body.discount_per,
             discount_rs: req.body.discount_rs,
             final_price: req.body.final_price,
             sale_disc_per: req.body.sale_disc_per,
@@ -527,3 +576,45 @@ exports.book_single_post = (req, res, next) => {
        next(err)
     });
 }
+
+// exports.EditBooks = (req,res,next)=>{
+//     const id = req.params.id;
+//     if (req.files.length == 1) {
+//         product = new Book({
+//             book_name: req.body.book_name,
+//             mrp_dollar: req.body.mrp_dollar,
+//             mrp_euro: req.body.mrp_euro,
+//             mrp_aus_dollar: req.body.mrp_aus_dollar,
+//             mrp_pound: req.body.mrp_pound,
+//             author_name: req.body.author_name,
+//             Isbn_no: req.body.Isbn_no,
+//             book_img: [
+//                 req.files[0].location
+//             ],
+//             publisher: req.body.publisher,
+//             condition: req.body.condition,
+//             print_format: req.body.print_format,
+//             mrp_inr: req.body.mrp_inr,
+//             sale_price: req.body.sale_price,
+//             description: req.body.description,
+//             publication_year: req.body.publication_year,
+//             quantity: req.body.quantity,
+//             no_Of_pages: req.body.no_Of_pages,
+//             rate: req.body.rate,
+//             language: req.body.language,
+//             dimensions: req.body.dimensions,
+//             weight: req.body.weight,
+//             categories: mongoose.Types.ObjectId(req.body.categories),
+//             subcategory: mongoose.Types.ObjectId(req.body.subcategory),
+//             sku: req.body.sku,
+//             country_origin: req.body.country_origin,
+//             discount_per: req.body.discount_per,
+//             discount_rs: req.body.discount_rs,
+//             final_price: req.body.final_price,
+//             sale_disc_per: req.body.sale_disc_per,
+//             sale_disc_inr: req.body.sale_disc_inr,
+//             sale_rate: req.body.sale_rate
+//         })
+//     }
+//     Book.update({_id : id},{$set:{}})
+// }

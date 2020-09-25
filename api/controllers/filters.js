@@ -14,8 +14,9 @@ exports.sortBy = (req, res, next) => {
             Book.find()
                 .skip(perPage * page)
                 .limit(perPage)
-                .sort(mysort).exec()
+            .exec()
                 .then(result => {
+                    
                     var pag = Math.ceil(totalBooks / perPage);
                     if (pag > page) {
                         res.status(200).json({
@@ -90,7 +91,7 @@ exports.price_sort = (req, res, next) => {
     Book.countDocuments({ final_price: { $gte: (first), $lte: (second) } }, (err, count) => {
         var totalBooks = count;
         const mysort = {  final_price : 1 };
-        Book.find({ final_price: { $gte: (first), $lte: (second) } }).select('final_price').sort(mysort)
+        Book.find({ final_price: { $gte: (first), $lte: (second) } }).sort(mysort)
             .skip(perPage * page)
             .limit(perPage)
             .exec()

@@ -57,9 +57,10 @@ exports.deleteCats = (req, res, next) => {
 
 exports.deleteSubcats = (req, res, next) => {
     const subcatId = req.query.subcatId;
-    const catId = req.params.catId
-    Category.findOneAndUpdate({ _id: catId }, { $pull: { "subcategory": { _id: subcatId } } }).exec()
+    const catId = req.params.catId;
+    Category.findOneAndUpdate({ _id: catId }, { $pull: { "subcategory": subcatId } }).exec()
         .then(result => {
+            console.log(result)
             if (result) {
                 res.status(200).json({
                     message: "Subcategory Is Deleted From Category"
@@ -67,9 +68,7 @@ exports.deleteSubcats = (req, res, next) => {
             }
         })
         .catch(err => {
-            res.status(500).json({
-                error: err
-            });
+          next(err)
         });
 }
 
@@ -78,6 +77,7 @@ exports.UpdateSubcat = (req, res, next) => {
     const catId = req.params.catId
     Category.findOneAndUpdate({ _id: catId }, { $push: { "subcategory": { _id: subcatId } } }).exec()
         .then(result => {
+            console.log(result)
             if (result) {
                 res.status(200).json({
                     message: "Subcategory Added To Category"
