@@ -10,19 +10,20 @@ const bookSchema = mongoose.Schema({
         
     },
     active_bool:{
-        type:Number
+        type:Number,
+        default: 1
     },
     mrp_dollar:{
-        type:String
+        type:Number
     },
     mrp_euro:{
-        type:String
+        type:Number
     },
     mrp_pound:{
-        type:String
+        type:Number
     },
     mrp_aus_dollar:{
-        type:String
+        type:Number
     },
     author_name: {
         type: String
@@ -48,11 +49,11 @@ const bookSchema = mongoose.Schema({
         
     },
     mrp_inr: {
-        type: String
+        type: Number
     },
 
     sale_price :{
-        type: String
+        type: Number
         
     },
     description: {
@@ -70,7 +71,7 @@ const bookSchema = mongoose.Schema({
         type: String
     },
     rate : {
-        type : String
+        type : Number
     },
     language: {
         type: String
@@ -100,25 +101,22 @@ const bookSchema = mongoose.Schema({
         type : String
     },
     discount_per:{
-        type : String
+        type : Number
     },
     discount_rs:{
-        type : String
-    },
-    excel_file : {
-        type : String
+        type : Number
     },
     final_price:{
-        type: String
+        type: Number
     },
     sale_disc_per:{
-        type:String
+        type:Number
     },
     sale_disc_inr:{
-        type:String
+        type:Number
     },
     sale_rate:{
-        type:String
+        type:Number
     },
 },{
     toObject : {virtuals : true},
