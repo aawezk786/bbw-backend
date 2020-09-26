@@ -14,6 +14,7 @@ exports.sortBy = (req, res, next) => {
             Book.find()
                 .skip(perPage * page)
                 .limit(perPage)
+                .sort(mysort)
             .exec()
                 .then(result => {
                     
