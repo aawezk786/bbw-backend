@@ -11,13 +11,14 @@ exports.sortBy = (req, res, next) => {
         const mysort = { final_price: 1 };
         Book.countDocuments({}, (err, count) => {
             var totalBooks = count;
-            Book.find()
+            if (err) throw err;
+            Book.aggregate().sort(mysort).allowDiskUse(true)
                 .skip(perPage * page)
                 .limit(perPage)
                 .sort(mysort)
             .exec()
                 .then(result => {
-                    
+                    console.log(result)
                     var pag = Math.ceil(totalBooks / perPage);
                     if (pag > page) {
                         res.status(200).json({
@@ -26,7 +27,8 @@ exports.sortBy = (req, res, next) => {
                             totalBooks: totalBooks,
                             pages: Math.ceil(totalBooks / perPage )
                         });
-                    } else {
+                    }
+                     else {
                         res.status(200).json({
                             success: false,
                             books: [],
@@ -47,10 +49,10 @@ exports.sortBy = (req, res, next) => {
         const mysort = { final_price: -1 };
         Book.countDocuments({}, (err, count) => {
             var totalBooks = count;
-            Book.find()
+            Book.aggregate().sort(mysort).allowDiskUse(true)
                 .skip(perPage * page)
                 .limit(perPage)
-                .sort(mysort).exec()
+                .exec()
                 .then(result => {
                     var pag = Math.ceil(totalBooks / perPage);
                     if (pag > page) {
@@ -88,14 +90,17 @@ exports.price_sort = (req, res, next) => {
     const second = req.params.second;
     const perPage = 20;
     const page = req.query.page - 1;
-
-    Book.countDocuments({ final_price: { $gte: (first), $lte: (second) } }, (err, count) => {
+    Book.countDocuments({ final_price: { $gte: (first) , $lte : (second)} }, (err, count) => {
         var totalBooks = count;
         const mysort = {  final_price : 1 };
-        Book.find({ final_price: { $gte: (first), $lte: (second) } }).sort(mysort)
-            .skip(perPage * page)
-            .limit(perPage)
-            .exec()
+        Book.aggregate()
+        .match({final_price:{$gte: parseInt(first),$lte : parseInt(second)} })
+        // .project({book_name : 1,final_price : 1,final_active :{ $gte: ["$final_price",first]},final_inact:{ $lte : ["$final_price" , second]}})
+        .sort(mysort)
+        .allowDiskUse(true)
+                .skip(perPage * page)
+                .limit(perPage)
+                .exec()
             .then(result => {
                 var pag = Math.ceil(totalBooks / perPage);
                 if (pag > page) {
