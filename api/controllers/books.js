@@ -42,12 +42,13 @@ exports.update_books = (req, res, next) => {
             }})
             .then((data)=>{
                 console.log(record[i].mrp_inr)
+                res.json("Updated Success")
             })
             .catch((error)=>{
                 next(error)
             })
         }
-        res.json("Updated Success")
+        
        
     })
     .catch(err=>{

@@ -10,10 +10,7 @@ var cron = require('node-cron');
 const request = require('request');
 const multer = require('multer');
 let shiprocketToken;
-const pdf = require('pdf').pdf;
-const fs = require('fs');
-var doc = new pdf()
-
+const Book = require('../models/book');
 
 
 const multerS3 = require('multer-s3');
@@ -116,7 +113,14 @@ router.post('/verify', checkAuth, (req, res, next) => {
     if (expectedSignature === req.query.razorpay_signature) {
         order.save()
             .then(data => {
-                
+                let book = [];
+                 book = req.body.book;
+                 for (let i = 0; i < book.length; i++) {
+                     let bookdetail = book[i].bookdetail;
+                     let element = book[i].units;
+                     Book.updateOne({_id : bookdetail},{$inc : {quantity : -element} });
+                     
+                 }
                 Coupon.findOneAndUpdate({ _id: req.body.coupon_code }, { $push: { "user": req.userData.userId } }).exec()
                     .then(result => {
                         res.status(200).json({

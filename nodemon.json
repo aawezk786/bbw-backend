@@ -1,6 +1,8 @@
 {
     "env": {
         "MONGO_ATLAS_PW" : "zewaa",
-        "JWT_KEY" : "secret"
+        "JWT_KEY" : "secret",
+        "ACCESS_KEY" : "AKIAJNDQPKKWVKO7SZJA",
+        "SECRET_KEY" : "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"
     }
 }

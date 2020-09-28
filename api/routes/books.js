@@ -7,7 +7,7 @@ const checkAuth = require('../middleware/check-auth');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 
-const s3 = new aws.S3({ accessKeyId: 'AKIAJNDQPKKWVKO7SZJA ', secretAccessKey: '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' });
+const s3 = new aws.S3({ accessKeyId: process.env.ACCESS_KEY, secretAccessKey: process.env.SECRET_KEY });
 
 let uploadsingle = multer({
     storage: multerS3({
