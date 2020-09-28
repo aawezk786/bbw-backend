@@ -209,7 +209,7 @@ exports.get_userId = (req, res, next) => {
             });
         },
         function (callback) {
-            User.aggregate().match({"_id" : req.userData.userId}).allowDiskUse(true)
+            User.find({_id : req.userData.userId})
                 .exec((err, users) => {
                     if (err) return next(err);
                     callback(err, users);
