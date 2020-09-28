@@ -116,11 +116,13 @@ router.post('/verify', checkAuth, (req, res, next) => {
                 let book = [];
                  book = req.body.book;
                  for (let i = 0; i < book.length; i++) {
-                     let bookdetail = book[i].bookdetail;
-                     let element = book[i].units;
-                     Book.updateOne({_id : bookdetail},{$set:{$inc : {quantity : -element}} });
-                     
-                 }
+                    let bookdetail = book[i]['bookdetail'];
+                    console.log(bookdetail)
+                    let element = book[i].units;
+                    console.log(element)
+                    Book.updateOne({_id : bookdetail},{$inc : {quantity : -element}}).then(data=>{console.log(data)}).catch(err=>{console.log(err)})
+                    
+                }
                 Coupon.findOneAndUpdate({ _id: req.body.coupon_code }, { $push: { "user": req.userData.userId } }).exec()
                     .then(result => {
                         res.status(200).json({
