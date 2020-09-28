@@ -116,6 +116,7 @@ router.post('/verify', checkAuth, (req, res, next) => {
     if (expectedSignature === req.query.razorpay_signature) {
         order.save()
             .then(data => {
+                
                 Coupon.findOneAndUpdate({ _id: req.body.coupon_code }, { $push: { "user": req.userData.userId } }).exec()
                     .then(result => {
                         res.status(200).json({

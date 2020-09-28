@@ -4,6 +4,8 @@ const Book = require('../models/book');
 router.get('/', async (req, res) => {
   const perPage = 20;
   const page = req.query.page - 1;
+
+
   if (req.query.book_name == '1') {
     let searchKeyword = req.query.searchKeyword
       ? {
@@ -13,12 +15,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-      let products = await Book.countDocuments({ ...searchKeyword });
+    let products = await Book.countDocuments({ ...searchKeyword ,quantity : {$ne : 0}});
 
-      let productslen = products;
-  
-      let productsOP = await Book.aggregate().match({ ...searchKeyword }).skip(perPage * page)
-        .limit(perPage).sort({final_price: 1}).allowDiskUse(true).exec();
+    let productslen = products;
+
+    let productsOP = await Book.aggregate().match({ ...searchKeyword ,quantity : {$ne : 0}}).skip(perPage * page)
+      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -27,6 +29,8 @@ router.get('/', async (req, res) => {
       pages: Math.ceil(productslen / perPage)
     });
   }
+
+
   if (req.query.author_name == '1') {
     let searchKeyword = req.query.searchKeyword
       ? {
@@ -36,20 +40,22 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-      let products = await Book.countDocuments({ ...searchKeyword });
+    let products = await Book.countDocuments({ ...searchKeyword,quantity : {$ne : 0} });
 
-      let productslen = products;
-  
-      let productsOP = await Book.aggregate().match({ ...searchKeyword }).skip(perPage * page)
-        .limit(perPage).sort({final_price: 1}).allowDiskUse(true).exec();
+    let productslen = products;
+
+    let productsOP = await Book.aggregate().match({ ...searchKeyword ,quantity : {$ne : 0}}).skip(perPage * page)
+      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
       books: productsOP,
       totalBooks: productslen,
-      pages: Math.ceil(productslen / perPage )
+      pages: Math.ceil(productslen / perPage)
     });
   }
+
+
   if (req.query.publisher == '1') {
     let searchKeyword = req.query.searchKeyword
       ? {
@@ -59,12 +65,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-      let products = await Book.countDocuments({ ...searchKeyword });
+    let products = await Book.countDocuments({ ...searchKeyword ,quantity : {$ne : 0}});
 
-      let productslen = products;
-  
-      let productsOP = await Book.aggregate().match({ ...searchKeyword }).skip(perPage * page)
-        .limit(perPage).sort({final_price: 1}).allowDiskUse(true).exec();
+    let productslen = products;
+
+    let productsOP = await Book.aggregate().match({ ...searchKeyword ,quantity : {$ne : 0}}).skip(perPage * page)
+      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -73,6 +79,8 @@ router.get('/', async (req, res) => {
       pages: Math.ceil(productslen / perPage)
     });
   }
+
+
   if (req.query.isbn == '1') {
     let searchKeyword = req.query.searchKeyword
       ? {
@@ -82,12 +90,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-      let products = await Book.countDocuments({ ...searchKeyword });
+    let products = await Book.countDocuments({ ...searchKeyword ,quantity : {$ne : 0}});
 
-      let productslen = products;
-  
-      let productsOP = await Book.aggregate().match({ ...searchKeyword }).skip(perPage * page)
-        .limit(perPage).sort({final_price: 1}).allowDiskUse(true).exec();
+    let productslen = products;
+
+    let productsOP = await Book.aggregate().match({ ...searchKeyword ,quantity : {$ne : 0}}).skip(perPage * page)
+      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -99,7 +107,13 @@ router.get('/', async (req, res) => {
   res.json({
     message: "Check query"
   });
+
+
 });
+
+
+
+
 
 router.get('/books', async (req, res) => {
   const perPage = 20;
@@ -113,12 +127,12 @@ router.get('/books', async (req, res) => {
         },
       }
       : {};
-    let products = await Book.countDocuments({ ...searchKeyword });
+    let products = await Book.countDocuments({ ...searchKeyword ,quantity : {$ne : 0}});
 
     let productslen = products;
 
-    let productsOP = await Book.aggregate().match({ ...searchKeyword }).skip(perPage * page)
-      .limit(perPage).sort({final_price: 1}).allowDiskUse(true).exec();
+    let productsOP = await Book.aggregate().match({ ...searchKeyword ,quantity : {$ne : 0}}).skip(perPage * page)
+      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -132,6 +146,10 @@ router.get('/books', async (req, res) => {
   });
 });
 
+
+
+
+
 router.get('/filter/new', (req, res, next) => {
   var asc = req.query.sortBy == 'asc';
   var desc = req.query.sortBy == 'desc';
@@ -139,9 +157,9 @@ router.get('/filter/new', (req, res, next) => {
   const page = req.query.page - 1;
   if (asc) {
     const mysort = { final_price: 1 };
-    Book.countDocuments({ condition: "New" }, (err, count) => {
+    Book.countDocuments({ condition: "New" ,quantity : {$ne : 0}}, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: "New"  })
+      Book.aggregate().match({ condition: "New",quantity : {$ne : 0} })
         .skip(perPage * page)
         .limit(perPage)
         .sort(mysort).allowDiskUse(true).exec()
@@ -170,9 +188,9 @@ router.get('/filter/new', (req, res, next) => {
   }
   if (desc) {
     const mysort = { final_price: -1 };
-    Book.countDocuments({ condition: "New" }, (err, count) => {
+    Book.countDocuments({ condition: "New" ,quantity : {$ne : 0}}, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: "New"  })
+      Book.aggregate().match({ condition: "New",quantity : {$ne : 0} })
         .skip(perPage * page)
         .limit(perPage)
         .sort(mysort).allowDiskUse(true).exec()
@@ -205,7 +223,12 @@ router.get('/filter/new', (req, res, next) => {
     });
   }
 });
-router.get('/filter/preowned', (req, res,next) => {
+
+
+
+
+
+router.get('/filter/preowned', (req, res, next) => {
   var asc = req.query.sortBy == 'asc';
   var desc = req.query.sortBy == 'desc';
   var condition = req.query.condition = 'Pre';
@@ -214,9 +237,9 @@ router.get('/filter/preowned', (req, res,next) => {
   var regex = new RegExp(condition.toLowerCase(), 'i');
   if (asc) {
     const mysort = { final_price: 1 };
-    Book.countDocuments({ condition: regex }, (err, count) => {
+    Book.countDocuments({ condition: regex ,quantity : {$ne : 0}}, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: regex })
+      Book.aggregate().match({ condition: regex ,quantity : {$ne : 0}})
         .skip(perPage * page)
         .limit(perPage)
         .sort(mysort).allowDiskUse(true).exec()
@@ -246,9 +269,9 @@ router.get('/filter/preowned', (req, res,next) => {
   }
   if (desc) {
     const mysort = { final_price: -1 };
-    Book.countDocuments({ condition: regex }, (err, count) => {
+    Book.countDocuments({ condition: regex ,quantity : {$ne : 0}}, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: regex })
+      Book.aggregate().match({ condition: regex,quantity : {$ne : 0} })
         .skip(perPage * page)
         .limit(perPage)
         .sort(mysort).allowDiskUse(true).exec()
@@ -282,6 +305,10 @@ router.get('/filter/preowned', (req, res,next) => {
     });
   }
 });
+
+
+
+
 router.get('/priceDefined/:first/:second', (req, res, next) => {
   const first = req.params.first;
   const second = req.params.second;
@@ -289,11 +316,11 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
   const page = req.query.page - 1;
   var condition = req.query.condition;
   var regex = new RegExp(condition.toLowerCase(), 'i');
-  Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, condition: regex }, (err, count) => {
+  Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, condition: regex,quantity : {$ne : 0} }, (err, count) => {
     var totalBooks = count;
     const mysort = { final_price: 1 };
     Book.aggregate()
-    .match({final_price:{$gte: parseInt(first),$lte : parseInt(second)}, condition: regex  })
+      .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, condition: regex ,quantity : {$ne : 0}})
       .skip(perPage * page)
       .limit(perPage)
       .sort(mysort).allowDiskUse(true).exec()
@@ -321,4 +348,6 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
       });
   });
 });
+
+
 module.exports = router;
