@@ -67,7 +67,7 @@ exports.user_login = (req, res, next) => {
                     },
                         process.env.JWT_KEY,
                         {
-                            expiresIn: "30d"
+                            expiresIn: "365d"
                         });
                     return res.status(200).json({
                         message: "Auth Successfull",
@@ -266,7 +266,7 @@ exports.verification = (req, res, next) => {
                                         },
                                             process.env.JWT_KEY,
                                             {
-                                                expiresIn: "30d"
+                                                expiresIn: "365d"
                                             });
                                         return res.status(200).json({
                                             message: "Register Successfull",
@@ -526,7 +526,7 @@ exports.loginGoogle = (req, res, next) => {
                     },
                         process.env.JWT_KEY,
                         {
-                            expiresIn: "8d"
+                            expiresIn: "365d"
                         });
     
                     res.json({
@@ -559,7 +559,7 @@ exports.loginGoogle = (req, res, next) => {
                         },
                             process.env.JWT_KEY,
                             {
-                                expiresIn: "8d"
+                                expiresIn: "365d"
                             });
 
                         res.status(200).json({
@@ -597,7 +597,7 @@ exports.loginFacebook = (req, res, next) => {
                     },
                         process.env.JWT_KEY,
                         {
-                            expiresIn: "30d"
+                            expiresIn: "365d"
                         });
     
                     res.json({
@@ -632,7 +632,7 @@ exports.loginFacebook = (req, res, next) => {
                         },
                             process.env.JWT_KEY,
                             {
-                                expiresIn: "30d"
+                                expiresIn: "365d"
                             });
 
                         res.status(200).json({

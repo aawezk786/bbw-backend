@@ -2,7 +2,7 @@
     "env": {
         "MONGO_ATLAS_PW" : "zewaa",
         "JWT_KEY" : "secret",
-        "ACCESS_KEY" : "AKIAJNDQPKKWVKO7SZJA",
-        "SECRET_KEY" : "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"
+        "ACCESS_KEY" : "AKIAISUGXWVPZMQARIDA",
+        "SECRET_KEY" : "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"
     }
 }
