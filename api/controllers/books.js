@@ -508,8 +508,8 @@ exports.book_single_post = (req, res, next) => {
 
 exports.EditBooks = (req,res,next)=>{
     const id = req.params.id;
-    if (req.files.length == 1) {
-     const   product = {
+
+        Book.updateOne({_id : id},{
             book_name: req.body.book_name,
             mrp_dollar: req.body.mrp_dollar,
             mrp_euro: req.body.mrp_euro,
@@ -517,9 +517,7 @@ exports.EditBooks = (req,res,next)=>{
             mrp_pound: req.body.mrp_pound,
             author_name: req.body.author_name,
             Isbn_no: req.body.Isbn_no,
-            book_img: [
-                req.files[0].location
-            ],
+            book_img: req.body.book_img,
             publisher: req.body.publisher,
             condition: req.body.condition,
             print_format: req.body.print_format,
@@ -543,10 +541,9 @@ exports.EditBooks = (req,res,next)=>{
             sale_disc_per: req.body.sale_disc_per,
             sale_disc_inr: req.body.sale_disc_inr,
             sale_rate: req.body.sale_rate
-        }
-        Book.updateOne({_id : id},{$set:product})
-        .then(result=>{console.log(result)})
+        })
+        .then(result=>{res.json({message : "Updated Successfully",result : result})})
         .catch(err=>{next(err)});
-    }
+    
 }
     
