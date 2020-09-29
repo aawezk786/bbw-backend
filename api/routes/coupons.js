@@ -34,6 +34,7 @@ router.get('/getAll', (req,res,next)=>{
   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
   let year = date_ob.getFullYear();
   let dates = year + "-" + month + "-" + date;
+  console.log(dates)
     Coupon.find({expiry_date : {$ne: dates}}).populate('user')
     .exec()
     .then(docs =>{

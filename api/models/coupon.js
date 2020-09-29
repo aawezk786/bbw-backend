@@ -9,7 +9,7 @@ const CouponSchema = mongoose.Schema({
    percentage: {type:Boolean},
    coupon_amount:{type:String},
    created_at:{ type: Date, default: Date.now()},
-   expiry_date:{type:String}
+   expiry_date:{type:Date}
     
 });
 module.exports = mongoose.model('Coupon', CouponSchema);
