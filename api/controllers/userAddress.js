@@ -94,7 +94,7 @@ exports.getAddByUser =(req, res, next) => {
                 user
             )
         }else{
-            res.status(404).json({address : []})
+            res.status(200).json({address : []})
         }
         
     })
