@@ -137,7 +137,7 @@ exports.latestBooks = (req, res, next) => {
     async.parallel([
         function (callback) {
             Book.find({quantity : {$ne : 0}}).sort(mysort)
-                .limit(5)
+                .limit(20)
                 .populate('categories')
                 .exec((err, books) => {
                     if (err) return next(err);
@@ -163,7 +163,7 @@ exports.popularbook = (req, res, next) => {
     async.parallel([
         function (callback) {
             Book.find({quantity : {$ne : 0}}).sort(mysort)
-                .limit(5)
+                .limit(20)
                 .populate('categories')
                 .exec((err, books) => {
                     if (err) return next(err);
