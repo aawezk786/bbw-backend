@@ -81,7 +81,7 @@ exports.getAllBooks = (req, res, next) => {
     const page = req.query.page - 1;
     async.parallel([
         function (callback) {
-            Book.countDocuments({}, (err, count) => {
+            Book.countDocuments({quantity : {$ne : 0}}, (err, count) => {
                 var totalBooks = count;
                 callback(err, totalBooks);
             });
