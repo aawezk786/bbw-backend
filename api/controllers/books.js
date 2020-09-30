@@ -237,7 +237,6 @@ exports.getBooksByCats = (req, res, next) => {
         },
         function (callback) {
             const mysort = { final_price: 1 };
-            Book.find({quantity : {$ne : 0}})
             Book.find({ categories: req.params.catId,quantity : {$ne : 0} })
             .skip(perPage * page)
             .limit(perPage)
