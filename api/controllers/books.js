@@ -106,13 +106,13 @@ exports.getAllBooks = (req, res, next) => {
     ], function (err, results) {
         var totalBooks = results[0];
         var books = results[1];
-        var pag = Math.ceil(totalBooks / perPage );
+        var pag = Math.ceil(totalBooks / perPage - 1);
         if(pag > page){
         res.status(200).json({
             success: true,
             books: books,
             totalBooks: totalBooks,
-            pages: Math.ceil(totalBooks / perPage)
+            pages: Math.ceil(totalBooks / perPage - 1)
         });
     }else{
         res.status(200).json({
