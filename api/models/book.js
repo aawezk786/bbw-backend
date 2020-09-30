@@ -81,7 +81,7 @@ const bookSchema = mongoose.Schema({
         type: String
     },
     weight: {
-        type: String
+        type: Number
         
     },
     categories: {
