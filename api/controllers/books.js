@@ -238,7 +238,7 @@ exports.getBooksByCats = (req, res, next) => {
             });
         },
         function (callback) {
-            const mysort = { final_price: 1 };
+            const mysort = { book_name : 1 };
             Book.find({ categories: req.params.catId,quantity : {$ne : 0} })
             .skip(perPage * page)
             .limit(perPage)
@@ -290,7 +290,7 @@ exports.getBooksBySubCats = (req, res, next) => {
             });
         },
         function (callback) {
-            const mysort = { final_price : 1 };
+            const mysort = { book_name : 1 };
             Book.find({ subcategory: req.params.catId,quantity : {$ne : 0} })
             .skip(perPage * page)
             .limit(perPage)
