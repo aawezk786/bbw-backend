@@ -20,6 +20,7 @@ const orderSchema = mongoose.Schema({
             totalweight: Number,
             address: {
                 fullname : {type :String},
+                email : {type : String},
                 address : {type : String},
                 mobilenumber : {type : String},
                 city : {type : String},
