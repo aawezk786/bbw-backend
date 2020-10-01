@@ -26,10 +26,12 @@ const userSchema = mongoose.Schema({
         name : {
             type : String
         },
+        phonenumber :{
+            type : Number
+        },
         google_email : {
             type : String,
             lowercase : true
-        
         }
     },
     facebook : {
@@ -38,6 +40,9 @@ const userSchema = mongoose.Schema({
         },
         name : {
             type : String
+        },
+        phonenumber :{
+            type : Number
         },
         facebook_email : {
             type : String,

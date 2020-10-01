@@ -67,16 +67,14 @@ router.post('/create', (req, res, next) => {
                 payment_capture: '1'
               };
               instance.orders.create(params).then(data=>{
-                console.log(data)
                return res.json({'sub':data,"status":"success","token" : shiprocketToken});
             }).catch(error =>{
-                console.log(error)
                 res.send({"sub":error,"status": "failed"})
             });
 })
 
 router.post('/Shiprocket-auth',(req,res,next)=>{
-     res.json({
+     res.status(200).json({
         message : "Success",
         token : shiprocketToken
     })  
@@ -151,7 +149,7 @@ router.get('/getorders',checkAuth, (req, res, next) => {
     const userId = req.userData.userId;
     Order.find({"user": userId})
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
-    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
+    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight condition')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {
@@ -210,7 +208,7 @@ router.post('/updateorder/:orderid', (req,res,next) => {
 router.get('/getorderbyid/:orderid', (req, res, next) => {
     Order.find({"order.orderid": req.params.orderid})
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid ')
-    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
+    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight condition')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {
@@ -252,7 +250,7 @@ router.get('/getallorders', (req, res, next) => {
     .skip(perPage * page)
     .limit(perPage)
     .select('order  isOrderCompleted isPaymentCompleted orderDate shiporderid shippingid invoiceurl')
-    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight')
+    .populate('order.book.bookdetail', 'book_name sku mrp_inr final_price weight condition')
     .populate('user order.coupon_code')
     .exec()
     .then(orders => {

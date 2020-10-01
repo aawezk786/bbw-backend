@@ -1,0 +1,41 @@
+{"awb_assign_status":1,
+	"response":{
+		"data":{
+			"courier_company_id":44,
+			"awb_code":"1904162617681",
+			"cod":0,"order_id":55748374,
+			"shipment_id":55419232,
+			"awb_code_status":1,
+			"assigned_date_time":{
+			"date":"2020-09-01 15:07:25.592530",
+		"timezone_type":3,
+	"timezone":"Asia\/Kolkata"
+},
+"applied_weight":2.5,
+"company_id":561385,
+"courier_name":"Delhivery Surface Lite",
+"child_courier_name":null,
+"routing_code":"DEL\/PAT",
+"rto_routing_code":"",
+"shipped_by":{
+"shipper_company_name":"8108481831",
+"shipper_address_1":"B\/406 ,Darsh Park",
+"shipper_address_2":"Narayan Nagar",
+"shipper_city":"Thane",
+"shipper_state":"Maharashtra",
+"shipper_country":"India",
+"shipper_postcode":"400612",
+"shipper_phone":"8108481831",
+"lat":"19.1818382",
+"long":"73.0220501",
+"shipper_email":"aawezk456@gmail.com"
+}
+}
+}
+}
+
+
+{
+    "status": 200,
+    "message": "Your request to cancel order id 224-462 has been taken. Since the AWB has already been assigned,  the freight amount against that order is blocked and it will be added back automatically in to your balance in 3-4 working days after the verification by the concerned team."
+}

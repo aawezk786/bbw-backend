@@ -18,4 +18,8 @@ router.post('/loginGoogle/',UsersController.loginGoogle);
 router.post('/loginFacebook/',UsersController.loginFacebook);
 router.put('/block/:UserId',UsersController.blockUser);
 router.put('/unblock/:UserId',UsersController.unblockUser);
+
+router.post('/update/otp',UsersController.otp);
+router.post('/verify/otp',checkAuth,UsersController.verifyOtpUpdate);
+
 module.exports = router;
