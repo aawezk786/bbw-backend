@@ -11,11 +11,8 @@ const request = require('request');
 const multer = require('multer');
 let shiprocketToken;
 const Book = require('../models/book');
-
-
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
-
 const s3 = new aws.S3({ accessKeyId: 'AKIAJZRZZA5E7WNYVRCA', secretAccessKey: '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' });
 
 let uploadsingle = multer({
@@ -77,6 +74,13 @@ router.post('/create', (req, res, next) => {
                 res.send({"sub":error,"status": "failed"})
             });
 })
+
+router.post('/Shiprocket-auth',(req,res,next)=>{
+     res.json({
+        message : "Success",
+        token : shiprocketToken
+    })  
+});
 
 router.post('/verify', checkAuth, (req, res, next) => {
     let order = new Order({
