@@ -90,8 +90,6 @@ exports.user_login = (req, res, next) => {
 
 
 exports.getall_users = (req, res, next) => {
-    const perPage = 20;
-    const page = req.query.page - 1;
     async.parallel([
         function (callback) {
             User.countDocuments({}, (err, count) => {
@@ -102,8 +100,6 @@ exports.getall_users = (req, res, next) => {
         },
         function (callback) {
             User.find({})
-            .skip(perPage * page)
-            .limit(perPage)
                 .exec((err, users) => {
                     if (err) return next(err);
                     callback(err, users);
@@ -112,22 +108,12 @@ exports.getall_users = (req, res, next) => {
     ], function (err, results) {
         var totaluser = results[0];
         var users = results[1];
-        var pag = Math.ceil(totaluser / perPage );
-        if(pag > page){
+        
             res.status(200).json({
                 success: true,
                 users: users,
-                totaluser: totaluser,
-                pages: Math.ceil(totaluser / perPage)
+                totaluser: totaluser
             });
-        }
-        else{
-            res.json({
-                success: false,
-                users: [],
-                pages: 0
-            });
-        }
         
         if (err) return next(err);
     });

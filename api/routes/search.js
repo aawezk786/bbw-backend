@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/book');
+const user = require('../models/user');
 router.get('/', async (req, res) => {
   const perPage = 20;
   const page = req.query.page - 1;
@@ -110,6 +111,9 @@ router.get('/', async (req, res) => {
 
 
 });
+
+
+
 
 
 
@@ -348,6 +352,9 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
       });
   });
 });
+
+
+
 
 
 module.exports = router;

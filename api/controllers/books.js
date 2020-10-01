@@ -42,7 +42,9 @@ exports.update_books = (req, res, next) => {
             }})
             .then((data)=>{
                 console.log(record[i].mrp_inr)
-                res.json("Updated Success")
+                // setTimeout(()=>{
+                    res.json({message: "Updated Success"})
+                // },5000)
             })
             .catch((error)=>{
                 next(error)

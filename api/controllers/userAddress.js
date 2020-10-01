@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const UserAddress = require('../models/userAddress');
-
+const Order = require('../models/order');
 
 exports.addAddress =(req, res, next) => {
     const userId = req.userData.userId;
@@ -25,6 +25,7 @@ exports.addAddress =(req, res, next) => {
                     [set]: {
                         _id: item ? item._id : new mongoose.Types.ObjectId(),
                         mobileNumber: req.body.mobileNumber,
+                        email : req.body.email,
                         pinCode:   req.body.pinCode,
                         fullName: req.body.fullName,
                         address: req.body.address,
@@ -55,6 +56,7 @@ exports.addAddress =(req, res, next) => {
                 user: userId,
                 address: {
                     mobileNumber : req.body.mobileNumber,
+                    email : req.body.email,
                     pinCode : req.body.pinCode,
                     fullName : req.body.fullName,
                     address : req.body.address,
@@ -127,4 +129,33 @@ exports.add_delete = (req, res, next) => {
                 error: err
             });
         });
+}
+
+exports.getUserDetails =async (req, res, next) => {
+let order =await Order.find({"user" : req.params.userId})
+.populate('order.book.bookdetail', '_id final_price sale_price book_name Isbn_no')
+.populate('order.coupon_code','coupon_code coupon_amount expiry_date')
+.exec();
+   await UserAddress.findOne({"user": req.params.userId})
+    .select('_id user address' )
+    .populate('user')
+    .exec()
+    .then(user => {
+        if(user != null){
+            res.status(200).json({
+                userDetails : user,
+                orders: order,
+                totalOrder : order.length
+            })
+        }else{
+            res.status(200).json({address : [],orders : order})
+        }
+        
+    })
+    .catch(error => {
+        res.status(500).json({
+            error: error
+        })
+    })
+
 }
