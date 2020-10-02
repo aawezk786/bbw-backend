@@ -91,7 +91,7 @@ exports.getAllBooks = (req, res, next) => {
         function (callback) {
             Book.aggregate().match({quantity : {$ne : 0}})
                 .skip(perPage * page)
-                .limit(perPage).sort({_id : 1})
+                .limit(perPage).sort({book_name : 1})
                 // .group(
                 //     {
                 //         _id :{Isbn_no: "$Isbn_no"},
