@@ -89,9 +89,9 @@ exports.getAllBooks = (req, res, next) => {
             });
         },
         function (callback) {
-            Book.find({quantity : {$ne : 0}})
+            Book.aggregate().match({quantity : {$ne : 0}})
                 .skip(perPage * page)
-                .limit(perPage)
+                .limit(perPage).sort({_id : 1})
                 // .group(
                 //     {
                 //         _id :{Isbn_no: "$Isbn_no"},
