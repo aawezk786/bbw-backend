@@ -205,7 +205,7 @@ exports.deleteBooks = (req, res, next) => {
 exports.detailBooks = (req, res, next) => {
     const id = req.params.bookId;
     Book.find({ _id: id })
-        .populate('categories', 'category')
+        .populate('categories', 'category').populate('subcategory')
         .exec()
         .then(doc => {
             if (doc) {
@@ -243,7 +243,7 @@ exports.getBooksByCats = (req, res, next) => {
             .skip(perPage * page)
             .limit(perPage)
             .sort(mysort)
-                .populate('categories')
+            .populate('categories', 'category')
                 .exec((err, books) => {
                     if (err) return next(err);
                     callback(err, books);
@@ -252,7 +252,7 @@ exports.getBooksByCats = (req, res, next) => {
         function (callback) {
             Category.findOne({ _id: req.params.catId }, (err, categories) => {
                 callback(err, categories)
-            });
+            }).populate('subcategory');
         }
     ], function (err, results) {
         var totalBooks = results[0];
@@ -302,9 +302,9 @@ exports.getBooksBySubCats = (req, res, next) => {
                 });
         },
         function (callback) {
-            Subcategory.findOne({ _id: req.params.catId }, (err, categories) => {
+            Category.findOne({ subcategory: req.params.catId }, (err, categories) => {
                 callback(err, categories)
-            });
+            }).populate('subcategory');
         }
     ], function (err, results) {
         var totalBooks = results[0];
