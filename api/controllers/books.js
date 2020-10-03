@@ -83,15 +83,15 @@ exports.getAllBooks = (req, res, next) => {
     const page = req.query.page - 1;
     async.parallel([
         function (callback) {
-            Book.countDocuments({quantity : {$ne : 0}}, (err, count) => {
+            Book.countDocuments({"quantity" : {$gt : 0}}, (err, count) => {
                 var totalBooks = count;
                 callback(err, totalBooks);
             });
         },
         function (callback) {
-            Book.aggregate().match({quantity : {$ne : 0}})
+            Book.aggregate().match({"quantity" : {$gt : 0}}).sort({book_name : 1}).allowDiskUse(true)
                 .skip(perPage * page)
-                .limit(perPage).sort({book_name : 1})
+                .limit(perPage)
                 // .group(
                 //     {
                 //         _id :{Isbn_no: "$Isbn_no"},
@@ -138,7 +138,7 @@ exports.latestBooks = (req, res, next) => {
     const mysort = { _id: -1 };
     async.parallel([
         function (callback) {
-            Book.find({quantity : {$ne : 0}}).sort(mysort)
+            Book.find({quantity : {$gt : 0}}).sort(mysort)
                 .limit(20)
                 .populate('categories')
                 .exec((err, books) => {
@@ -164,7 +164,7 @@ exports.popularbook = (req, res, next) => {
     const mysort = { _id: 1 };
     async.parallel([
         function (callback) {
-            Book.find({quantity : {$ne : 0}}).sort(mysort)
+            Book.find({quantity : {$gt : 0}}).sort(mysort)
                 .limit(20)
                 .populate('categories')
                 .exec((err, books) => {
@@ -232,17 +232,17 @@ exports.getBooksByCats = (req, res, next) => {
 
     async.parallel([
         function (callback) {
-            Book.countDocuments({ categories: req.params.catId ,quantity : {$ne : 0}}, (err, count) => {
+            Book.countDocuments({ categories: req.params.catId ,quantity : {$gt : 0}}, (err, count) => {
                 var totalBooks = count;
                 callback(err, totalBooks);
             });
         },
         function (callback) {
             const mysort = { book_name : 1 };
-            Book.find({ categories: req.params.catId,quantity : {$ne : 0} })
+            Book.find({ categories: req.params.catId,quantity : {$gt : 0} })
+            .sort(mysort)
             .skip(perPage * page)
             .limit(perPage)
-            .sort(mysort)
             .populate('categories', 'category')
                 .exec((err, books) => {
                     if (err) return next(err);
@@ -284,17 +284,17 @@ exports.getBooksBySubCats = (req, res, next) => {
     const page = req.query.page - 1;
     async.parallel([
         function (callback) {
-            Book.countDocuments({ subcategory: req.params.catId ,quantity : {$ne : 0}}, (err, count) => {
+            Book.countDocuments({ subcategory: req.params.catId ,quantity : {$gt : 0}}, (err, count) => {
                 var totalBooks = count;
                 callback(err, totalBooks);
             });
         },
         function (callback) {
             const mysort = { book_name : 1 };
-            Book.find({ subcategory: req.params.catId,quantity : {$ne : 0} })
+            Book.find({ subcategory: req.params.catId,quantity : {$gt : 0} })
+            .sort(mysort)
             .skip(perPage * page)
             .limit(perPage)
-            .sort(mysort)
                 .populate('categories' ,'category')
                 .exec((err, books) => {
                     if (err) return next(err);
@@ -532,8 +532,8 @@ exports.EditBooks = (req,res,next)=>{
             language: req.body.language,
             dimensions: req.body.dimensions,
             weight: req.body.weight,
-            categories: mongoose.Types.ObjectId(req.body.categories),
-            subcategory: mongoose.Types.ObjectId(req.body.subcategory),
+            categories: req.body.categories,
+            subcategory: req.body.subcategory,
             sku: req.body.sku,
             country_origin: req.body.country_origin,
             discount_per: req.body.discount_per,

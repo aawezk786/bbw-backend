@@ -16,12 +16,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $ne: 0 } });
+    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $gt: 0 } });
 
     let productslen = products;
 
-    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $ne: 0 } }).skip(perPage * page)
-      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
+    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $gt: 0 } })
+    .sort({ final_price: 1 }).allowDiskUse(true).skip(perPage * page).limit(perPage).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -41,12 +41,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $ne: 0 } });
+    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $gt: 0 } });
 
     let productslen = products;
 
-    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $ne: 0 } }).skip(perPage * page)
-      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
+    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $gt: 0 } })
+    .sort({ final_price: 1 }).allowDiskUse(true).skip(perPage * page).limit(perPage).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -66,12 +66,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $ne: 0 } });
+    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $gt: 0 } });
 
     let productslen = products;
 
-    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $ne: 0 } }).skip(perPage * page)
-      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
+    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $gt: 0 } })
+    .sort({ final_price: 1 }).allowDiskUse(true).skip(perPage * page).limit(perPage).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -91,12 +91,12 @@ router.get('/', async (req, res) => {
         },
       }
       : {};
-    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $ne: 0 } });
+    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $gt: 0 } });
 
     let productslen = products;
 
-    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $ne: 0 } }).skip(perPage * page)
-      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
+    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $gt: 0 } })
+    .sort({ final_price: 1 }).allowDiskUse(true).skip(perPage * page).limit(perPage).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -131,12 +131,14 @@ router.get('/books', async (req, res) => {
         },
       }
       : {};
-    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $ne: 0 } });
+    let products = await Book.countDocuments({ ...searchKeyword, quantity: { $gt: 0 } });
 
     let productslen = products;
 
-    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $ne: 0 } }).skip(perPage * page)
-      .limit(perPage).sort({ final_price: 1 }).allowDiskUse(true).exec();
+    let productsOP = await Book.aggregate().match({ ...searchKeyword, quantity: { $gt: 0 } })
+    .sort({ final_price: 1 }).allowDiskUse(true)
+    .skip(perPage * page)
+      .limit(perPage).exec();
     return res.status(200).json({
       success: true,
       count: productslen + " " + "Results found",
@@ -161,12 +163,13 @@ router.get('/filter/new', (req, res, next) => {
   const page = req.query.page - 1;
   if (asc) {
     const mysort = { final_price: 1 };
-    Book.countDocuments({ condition: "New", quantity: { $ne: 0 } }, (err, count) => {
+    Book.countDocuments({ condition: "New", quantity: { $gt: 0 } }, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: "New", quantity: { $ne: 0 } })
+      Book.aggregate().match({ condition: "New", quantity: { $gt: 0 } })
+      .sort(mysort).allowDiskUse(true)
         .skip(perPage * page)
         .limit(perPage)
-        .sort(mysort).allowDiskUse(true).exec()
+        .exec()
         .then(result => {
           var pag = Math.ceil(totalBooks / perPage);
           if (pag > page) {
@@ -192,12 +195,13 @@ router.get('/filter/new', (req, res, next) => {
   }
   if (desc) {
     const mysort = { final_price: -1 };
-    Book.countDocuments({ condition: "New", quantity: { $ne: 0 } }, (err, count) => {
+    Book.countDocuments({ condition: "New", quantity: { $gt: 0 } }, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: "New", quantity: { $ne: 0 } })
+      Book.aggregate().match({ condition: "New", quantity: { $gt: 0 } })
+      .sort(mysort).allowDiskUse(true)
         .skip(perPage * page)
         .limit(perPage)
-        .sort(mysort).allowDiskUse(true).exec()
+        .exec()
         .then(result => {
           var pag = Math.ceil(totalBooks / perPage);
           if (pag > page) {
@@ -241,12 +245,13 @@ router.get('/filter/cats', (req, res, next) => {
     if (asc) {
 
       const mysort = { final_price: 1 };
-      Book.countDocuments({ categories: catId, quantity: { $ne: 0 } }, (err, count) => {
+      Book.countDocuments({ categories: catId, quantity: { $gt: 0 } }, (err, count) => {
         var totalBooks = count;
-        Book.aggregate().match({ categories: catId, quantity: { $ne: 0 } })
+        Book.aggregate().match({ categories: catId, quantity: { $gt: 0 } })
+        .sort(mysort).allowDiskUse(true)
           .skip(perPage * page)
           .limit(perPage)
-          .sort(mysort).allowDiskUse(true).exec()
+          .exec()
           .then(result => {
             var pag = Math.ceil(totalBooks / perPage);
             console.log(pag)
@@ -275,12 +280,13 @@ router.get('/filter/cats', (req, res, next) => {
     else if (desc) {
 
       const mysort = { final_price: -1 };
-      Book.countDocuments({ categories: catId, quantity: { $ne: 0 } }, (err, count) => {
+      Book.countDocuments({ categories: catId, quantity: { $gt: 0 } }, (err, count) => {
         var totalBooks = count;
-        Book.aggregate().match({ categories: catId, quantity: { $ne: 0 } })
+        Book.aggregate().match({ categories: catId, quantity: { $gt: 0 } })
+        .sort(mysort).allowDiskUse(true)
           .skip(perPage * page)
           .limit(perPage)
-          .sort(mysort).allowDiskUse(true).exec()
+          .exec()
           .then(result => {
             var pag = Math.ceil(totalBooks / perPage);
             console.log(pag)
@@ -318,12 +324,13 @@ router.get('/filter/cats', (req, res, next) => {
     if (asc) {
 
       const mysort = { final_price: 1 };
-      Book.countDocuments({ subcategory: subCatId, quantity: { $ne: 0 } }, (err, count) => {
+      Book.countDocuments({ subcategory: subCatId, quantity: { $gt: 0 } }, (err, count) => {
         var totalBooks = count;
-        Book.aggregate().match({ subcategory: subCatId, quantity: { $ne: 0 } })
+        Book.aggregate().match({ subcategory: subCatId, quantity: { $gt: 0 } })
+        .sort(mysort).allowDiskUse(true)
           .skip(perPage * page)
           .limit(perPage)
-          .sort(mysort).allowDiskUse(true).exec()
+          .exec()
           .then(result => {
             var pag = Math.ceil(totalBooks / perPage);
             console.log(pag)
@@ -352,12 +359,13 @@ router.get('/filter/cats', (req, res, next) => {
     else if (desc) {
 
       const mysort = { final_price: -1 };
-      Book.countDocuments({ subcategory: subCatId, quantity: { $ne: 0 } }, (err, count) => {
+      Book.countDocuments({ subcategory: subCatId, quantity: { $gt: 0 } }, (err, count) => {
         var totalBooks = count;
-        Book.aggregate().match({ subcategory: subCatId, quantity: { $ne: 0 } })
+        Book.aggregate().match({ subcategory: subCatId, quantity: { $gt: 0 } })
+        .sort(mysort).allowDiskUse(true)
           .skip(perPage * page)
           .limit(perPage)
-          .sort(mysort).allowDiskUse(true).exec()
+          .exec()
           .then(result => {
             var pag = Math.ceil(totalBooks / perPage);
             console.log(pag)
@@ -404,12 +412,13 @@ router.get('/filter/preowned', (req, res, next) => {
   var regex = new RegExp(condition.toLowerCase(), 'i');
   if (asc) {
     const mysort = { final_price: 1 };
-    Book.countDocuments({ condition: regex, quantity: { $ne: 0 } }, (err, count) => {
+    Book.countDocuments({ condition: regex, quantity: { $gt: 0 } }, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: regex, quantity: { $ne: 0 } })
+      Book.aggregate().match({ condition: regex, quantity: { $gt: 0 } })
+      .sort(mysort).allowDiskUse(true)
         .skip(perPage * page)
         .limit(perPage)
-        .sort(mysort).allowDiskUse(true).exec()
+        .exec()
         .then(result => {
           var pag = Math.ceil(totalBooks / perPage);
           console.log(pag)
@@ -436,12 +445,13 @@ router.get('/filter/preowned', (req, res, next) => {
   }
   if (desc) {
     const mysort = { final_price: -1 };
-    Book.countDocuments({ condition: regex, quantity: { $ne: 0 } }, (err, count) => {
+    Book.countDocuments({ condition: regex, quantity: { $gt: 0 } }, (err, count) => {
       var totalBooks = count;
-      Book.aggregate().match({ condition: regex, quantity: { $ne: 0 } })
+      Book.aggregate().match({ condition: regex, quantity: { $gt: 0 } })
+      .sort(mysort).allowDiskUse(true)
         .skip(perPage * page)
         .limit(perPage)
-        .sort(mysort).allowDiskUse(true).exec()
+        .exec()
         .then(result => {
           var pag = Math.ceil(totalBooks / perPage);
           console.log(pag)
@@ -483,14 +493,15 @@ router.get('/cats/priceDefined/:first/:second', (req, res, next) => {
   var subCatId = req.query.subCatId;
 
   if (catId) {
-    Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, categories: catId, quantity: { $ne: 0 } }, (err, count) => {
+    Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, categories: catId, quantity: { $gt: 0 } }, (err, count) => {
       var totalBooks = count;
       const mysort = { final_price: 1 };
       Book.aggregate()
-        .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, categories: catId, quantity: { $ne: 0 } })
+        .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, categories: catId, quantity: { $gt: 0 } })
+        .sort(mysort).allowDiskUse(true)
         .skip(perPage * page)
         .limit(perPage)
-        .sort(mysort).allowDiskUse(true).exec()
+        .exec()
         .then(result => {
           var pag = Math.ceil(totalBooks / perPage);
           if (pag > page) {
@@ -515,14 +526,15 @@ router.get('/cats/priceDefined/:first/:second', (req, res, next) => {
         });
     });
   } else if (subCatId) {
-    Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, subcategory: subCatId, quantity: { $ne: 0 } }, (err, count) => {
+    Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, subcategory: subCatId, quantity: { $gt: 0 } }, (err, count) => {
       var totalBooks = count;
       const mysort = { final_price: 1 };
       Book.aggregate()
-        .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, subcategory: subCatId, quantity: { $ne: 0 } })
+        .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, subcategory: subCatId, quantity: { $gt: 0 } })
+        .sort(mysort).allowDiskUse(true)
         .skip(perPage * page)
         .limit(perPage)
-        .sort(mysort).allowDiskUse(true).exec()
+        .exec()
         .then(result => {
           var pag = Math.ceil(totalBooks / perPage);
           if (pag > page) {
@@ -563,14 +575,15 @@ router.get('/priceDefined/:first/:second', (req, res, next) => {
   const page = req.query.page - 1;
   var condition = req.query.condition;
   var regex = new RegExp(condition.toLowerCase(), 'i');
-  Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, condition: regex, quantity: { $ne: 0 } }, (err, count) => {
+  Book.countDocuments({ final_price: { $gte: (first), $lte: (second) }, condition: regex, quantity: { $gt: 0 } }, (err, count) => {
     var totalBooks = count;
     const mysort = { final_price: 1 };
     Book.aggregate()
-      .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, condition: regex, quantity: { $ne: 0 } })
+      .match({ final_price: { $gte: parseInt(first), $lte: parseInt(second) }, condition: regex, quantity: { $gt: 0 } })
+      .sort(mysort).allowDiskUse(true)
       .skip(perPage * page)
       .limit(perPage)
-      .sort(mysort).allowDiskUse(true).exec()
+      .exec()
       .then(result => {
         var pag = Math.ceil(totalBooks / perPage);
         if (pag > page) {

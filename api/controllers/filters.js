@@ -9,10 +9,10 @@ exports.sortBy = (req, res, next) => {
     const page = req.query.page - 1;
     if (asc) {
         const mysort = { final_price: 1 };
-        Book.countDocuments({quantity : {$ne : 0}}, (err, count) => {
+        Book.countDocuments({quantity : {$gt : 0}}, (err, count) => {
             var totalBooks = count;
             if (err) throw err;
-            Book.aggregate().match({quantity : {$ne : 0}}).sort(mysort).allowDiskUse(true)
+            Book.aggregate().match({quantity : {$gt : 0}}).sort(mysort).allowDiskUse(true)
                 .skip(perPage * page)
                 .limit(perPage)
             .exec()
@@ -46,9 +46,9 @@ exports.sortBy = (req, res, next) => {
 
     if (desc) {
         const mysort = { final_price: -1 };
-        Book.countDocuments({}, (err, count) => {
+        Book.countDocuments({quantity : {$gt : 0}}, (err, count) => {
             var totalBooks = count;
-            Book.aggregate().match({quantity : {$ne : 0}}).sort(mysort).allowDiskUse(true)
+            Book.aggregate().match({quantity : {$gt : 0}}).sort(mysort).allowDiskUse(true)
                 .skip(perPage * page)
                 .limit(perPage)
                 .exec()
@@ -89,11 +89,11 @@ exports.price_sort = (req, res, next) => {
     const second = req.params.second;
     const perPage = 20;
     const page = req.query.page - 1;
-    Book.countDocuments({ final_price: { $gte: (first) , $lte : (second)},quantity : {$ne : 0} }, (err, count) => {
+    Book.countDocuments({ final_price: { $gte: (first) , $lte : (second)},quantity : {$gt : 0} }, (err, count) => {
         var totalBooks = count;
         const mysort = {  final_price : 1 };
         Book.aggregate()
-        .match({final_price:{$gte: parseInt(first),$lte : parseInt(second)},quantity : {$ne : 0} })
+        .match({final_price:{$gte: parseInt(first),$lte : parseInt(second)},quantity : {$gt : 0} })
         // .project({book_name : 1,final_price : 1,final_active :{ $gte: ["$final_price",first]},final_inact:{ $lte : ["$final_price" , second]}})
         .sort(mysort)
         .allowDiskUse(true)
