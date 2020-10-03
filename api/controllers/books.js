@@ -279,6 +279,59 @@ exports.getBooksByCats = (req, res, next) => {
     });
 }
 
+exports.getBookCollectibles = (req, res, next) => {
+    const perPage = 20;
+    const page = req.query.page - 1;
+
+    async.parallel([
+        function (callback) {
+            Book.countDocuments({ categories: req.params.catId ,quantity : {$gt : 0}}, (err, count) => {
+                var totalBooks = count;
+                callback(err, totalBooks);
+            });
+        },
+        function (callback) {
+            const mysort = { book_name : 1 };
+            Book.find({ categories: req.params.catId,quantity : {$gt : 0} })
+            .sort(mysort)
+            .skip(perPage * page)
+            .limit(perPage)
+            .populate('categories', 'category')
+                .exec((err, books) => {
+                    if (err) return next(err);
+                    callback(err, books);
+                });
+        },
+        function (callback) {
+            Category.findOne({ _id: req.params.catId }, (err, categories) => {
+                callback(err, categories)
+            }).populate('subcategory');
+        }
+    ], function (err, results) {
+        var totalBooks = results[0];
+            var books = results[1];
+            var categories = results[2];
+        var pag = Math.ceil(totalBooks / perPage );
+        if(pag > page){
+            res.json({
+            success: true,
+            message: categories,
+            books: books,
+            totalBooks: totalBooks,
+            pages: Math.ceil(totalBooks / perPage)
+        });
+        }else{
+            res.json({
+                success: false,
+                books: [],
+                totalBooks: 0,
+                pages: 0
+            });
+        }
+        if(err) return next(err);
+    });
+}
+
 exports.getBooksBySubCats = (req, res, next) => {
     const perPage = 20;
     const page = req.query.page - 1;

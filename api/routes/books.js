@@ -64,6 +64,7 @@ router.get('/popular', BooksControllers.popularbook);
 router.get('/', BooksControllers.getAllBooks);
 router.get('/:bookId', BooksControllers.detailBooks);
 router.get('/categories/:catId', BooksControllers.getBooksByCats);
+router.get('/collectibles/:catId', BooksControllers.getBookCollectibles);
 router.get('/subcategory/:catId', BooksControllers.getBooksBySubCats);
 router.post('/singleBook', uploadsingle.array('book_img' ,4), BooksControllers.book_single_post);
 router.put('/updategoc/', BooksControllers.update_books);
